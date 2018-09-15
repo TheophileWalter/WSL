@@ -64,7 +64,7 @@
     ** Example: "2 8 math.pow" will return 256
     "pow" (
         ** If the power is < 1 we return 0
-        (pop 0)
+        (pop pop 1)
         ** If the power is >= 1 we compute it for real
         (
             exch copy ** Copy the number to multiply
@@ -73,8 +73,9 @@
             1 sub repeat ** The loop
             exch pop ** Clear the stack
         )
+        ** Prepare the stack order
+        (2 mb) 2 repeat copy 3 mb
         ** Condition for the power
-        2 mb exch ** Prepare the stack
         1 iflt
     ) def
 

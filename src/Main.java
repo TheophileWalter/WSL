@@ -22,7 +22,7 @@ public class Main {
 		//wsl.execute("\"a\"(\"b\"(\"c\"(\"d\" \"coucou\" def)def a.b.c)def a.b)def a a.b.c.d print");
 
 		wsl.execute(readFile("lib.wsl"));
-		wsl.execute("6 5 gt");
+		wsl.execute("2 0 math.pow");
 		wsl.execute("stack.print");
 		
 		//wsl.__debug_print_env();

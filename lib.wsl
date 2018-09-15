@@ -1,0 +1,29 @@
+** Commons
+"println"  ("\n" concat print) def  ** Print a string with a new line
+"uprint"   (string print) def       ** Print any type
+"uprintln" (string println) def     ** Print any type with a new line
+
+** Alias
+"sum" (add) def
+"true" 1 def
+"false" 0 def
+
+** Mathematics group
+"math" (
+    
+    ** Constants
+    "pi" 3.1415926535 def
+    "phi" (5 sqrt 1 add 2 div) def
+
+) def math
+
+** Informations
+"wsl" (
+    "version" "1.0 alpha" def
+    "is_alpha" true def
+    "is_beta" false def
+    "version_code" 1 def
+    "lib_version" "1.0" def
+    "lib_version_code" 1 def
+    "copyright" "Copyright 2018 - Théophile Walter" def
+) def wsl

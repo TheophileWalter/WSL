@@ -17,12 +17,12 @@ public class FSqrt implements WFunction {
 	public boolean execute(Stack<Token> s) {
 		try {
 			Token a = s.pop();
-			double n = ((TNumber) a).getValue();
-			s.add(new TNumber(Math.sqrt(n)));
 			if (!(a instanceof TNumber)) {
 				System.err.println("Error: Function \"" + name + "\" excpect a number!");
 				return false;
 			}
+			double n = ((TNumber) a).getValue();
+			s.add(new TNumber(Math.sqrt(n)));
 		} catch (EmptyStackException e) {
 			System.err.println("Error: Function \"" + name + "\": the stack contains less than one element!");
 			return false;

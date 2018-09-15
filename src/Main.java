@@ -6,6 +6,11 @@ import tw.walter.stack.WSL;
 public class Main {
 
 	public static void main(String... args) {
+		
+		/*
+		 * TODO
+		 * exit
+		 */
 
 		WSL wsl = new WSL();
 		// wsl.execute("123 456 add 789 sub string \"Hello world\\\" \\\\ \" concat print");
@@ -17,9 +22,10 @@ public class Main {
 		//wsl.execute("\"a\"(\"b\"(\"c\"(\"d\" \"coucou\" def)def a.b.c)def a.b)def a a.b.c.d print");
 
 		wsl.execute(readFile("lib.wsl"));
-		wsl.execute("wsl.copyright println");
-		wsl.execute("6 4 sum uprintln");
-		// wsl.__debug_print_env();
+		wsl.execute("6 5 gt");
+		wsl.execute("stack.print");
+		
+		//wsl.__debug_print_env();
 
 	}
 

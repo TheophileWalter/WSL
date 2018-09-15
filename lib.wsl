@@ -8,14 +8,44 @@
 
 
 ** Commons
-"println"  ("\n" concat print) def  ** Print a string with a new line
-"uprint"   (string print) def       ** Print any type
-"uprintln" (string println) def     ** Print any type with a new line
+"println"  ("\n" concat print) def              ** Print a string with a new line
+"uprint"   (string print) def                   ** Print any type
+"uprintln" (string println) def                 ** Print any type with a new line
+"uconcat"  (string exch string exch concat) def ** Concatenate any type as a string
+"exch"     (1 mb) def                           ** Exchange the two first values on the stack
+"copy"     (1 dup) def                          ** Copy the value on top of the stack
 
 ** Alias
 "sum" (add) def
 "true" 1 def
 "false" 0 def
+
+** Logical operations
+"not" ((false) exch (true) exch if) def ** Negation
+** Is a number is lower than another
+"lt" (
+    ** False if the two numbers are equals
+    (pop pop false)
+    ** Check if they are different
+    (copy 2 mb max equal)
+    ** Prepare the stack order
+    (3 mb) 2 repeat 2 dup (5 mb) 2 repeat
+    ** Condition
+    equal if
+) def
+** Is a number is greater than another
+"gt" (
+    ** False if the two numbers are equals
+    (pop pop false)
+    ** Check if they are different
+    (copy 2 mb min equal)
+    ** Prepare the stack order
+    (3 mb) 2 repeat 2 dup (5 mb) 2 repeat
+    ** Condition
+    equal if
+) def
+"iflt" (lt if) def ** If lower than, example: "(1) (2) 0 5 iflt" will put 1 in the stack
+"iflg" (gt if) def ** If greater than, example: "(1) (2) 0 5 ifgt" will put 2 in the stack
 
 ** Mathematics group
 "math" (
@@ -24,7 +54,78 @@
     "pi" 3.1415926535 def
     "phi" (5 sqrt 1 add 2 div) def
 
+    ** Convert degrees to radians
+    "rad" (math.pi 180 div mul) def
+
+    ** Convert radians to degrees
+    "deg" (180 math.pi div mul) def
+
+    ** Compute a power operation
+    ** Example: "2 8 math.pow" will return 256
+    "pow" (
+        ** If the power is < 1 we return 0
+        (pop 0)
+        ** If the power is >= 1 we compute it for real
+        (
+            exch copy ** Copy the number to multiply
+            2 mb exch ** Prepare the stack order
+            (exch copy 2 mb mul) exch ** The group to repeat
+            1 sub repeat ** The loop
+            exch pop ** Clear the stack
+        )
+        ** Condition for the power
+        2 mb exch ** Prepare the stack
+        1 iflt
+    ) def
+
 ) def math
+
+** Operations on the stack
+"stack" (
+
+    ** Empty the stack
+    ** Must remove 1 because the (pop) group is counted by size
+    "empty" ((pop) size 1 sub repeat) def
+
+    ** Fill the stact with given element
+    ** Example: "0 10 stack.fill" will put 10 times the number 0 in the stack
+    "fill" (
+        ** If the parameter is 0, we pop the value to fill
+        copy
+        (pop) exch ** Code if the parameter is <1
+        ((copy) exch 1 sub repeat) exch ** Code if greater than >=1
+        1 iflt
+    ) def
+
+    ** Print the stack
+    ** Warning: this will clear the stack!
+    "print" ((uprintln) size 1 sub repeat) def
+
+) def stack
+
+** Tests utilities
+"test" (
+
+    ** Pass if the top value is 1
+    ** Exit and print an error if the value is 0
+    ** The error message is the second stack value
+    "assert_true" (
+        ** Code executed if true
+        (pop) exch
+        ** Code executed if false
+        (uprintln 1 exit) exch
+        ** Condition
+        if
+    ) def
+
+    ** Pass if the top value is 0
+    ** Exit and print an error if the value is 1
+    ** The error message is the second stack value
+    "assert_false" (
+        not test.assert_true
+    ) def
+
+) def test
 
 ** Informations
 "wsl" (

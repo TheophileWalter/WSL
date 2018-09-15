@@ -129,7 +129,7 @@ public class Interpretor {
 						}
 
 						// Execute
-						Interpretor newIt = new Interpretor(stack, env, name);
+						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
 						int exitCode = newIt.execute(((TGroup) a).getList());
 
 						// Check for an error
@@ -142,6 +142,86 @@ public class Interpretor {
 						return -7;
 					}
 
+				}
+				
+				// If it's a loop
+				else if ("repeat".equals(name)) {
+
+					// Execute the previous group in the stack
+					try {
+
+						Token number = stack.pop(), code = stack.pop();
+
+						// Check the type, only a group can be executed
+						if (!(code instanceof TGroup) || !(number instanceof TNumber)) {
+
+							System.err.println("Error: Keyword \"repeat\" excpect a number and an instruction group!");
+							return -10;
+
+						}
+
+						// Execute...
+						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
+						int exitCode = 0, max = (int)((TNumber) number).getValue();
+						ArrayList<Token> repeatInstructions = ((TGroup) code).getList();
+						
+						// ...in a loop
+						for (int i = 0; i < max && exitCode == 0; i++) {
+							exitCode = newIt.execute(repeatInstructions);
+						}
+
+						// Check for an error
+						if (exitCode != 0) {
+							return exitCode;
+						}
+
+					} catch (EmptyStackException e) {
+						System.err.println("Error: Keyword \"repeat\": the stack contains less than two elements!");
+						return -9;
+					}
+					
+				}
+				
+				// If it's a condition
+				else if ("if".equals(name)) {
+
+					// Execute the correct group based on the first value in the stack
+					try {
+
+						Token condition = stack.pop(), elseGroup = stack.pop(), ifGroup = stack.pop();
+
+						// Check the types
+						if (!(condition instanceof TNumber) || !(ifGroup instanceof TGroup) || !(elseGroup instanceof TGroup)) {
+
+							System.err.println("Error: Keyword \"if\" excpect a number and two instruction groups!");
+							return -12;
+
+						}
+						
+						// Check the condition value
+						double conditionValue = ((TNumber) condition).getValue();
+						if (conditionValue != 0. && conditionValue != 1.) {
+							System.err.println("Error: Keyword \"if\" excpect 0 or 1 as condition argument!");
+							return -13;
+						}
+
+						// Execute...
+						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
+						ArrayList<Token> ifInstructions = ((TGroup) (conditionValue == 1. ? ifGroup : elseGroup)).getList();
+						
+						// ...based on the evaluation
+						int exitCode = newIt.execute(ifInstructions);
+
+						// Check for an error
+						if (exitCode != 0) {
+							return exitCode;
+						}
+
+					} catch (EmptyStackException e) {
+						System.err.println("Error: Keyword \"if\": the stack contains less than three elements!");
+						return -11;
+					}
+					
 				}
 
 				// If it's not a language keyword

@@ -21,10 +21,16 @@ public class WFunctionsList {
 		add("string", new FString());
 		add("concat", new FConcat());
 		add("print", new FPrint());
-		add("exch", new FExch());
+		//add("exch", new FExch()); // Use mb instead (lib.wsl defines an alias to use "exch")
 		add("pop", new FPop());
-		add("copy", new FCopy());
+		//add("copy", new FCopy()); // Use dup instead (lib.wsl defines an alias to use "copy")
 		add("sqrt", new FSqrt());
+		add("size", new FSize());
+		add("mb", new FMb());
+		add("min", new FMin());
+		add("max", new FMax());
+		add("equal", new FEqual());
+		add("dup", new FDup());
 
 	}
 

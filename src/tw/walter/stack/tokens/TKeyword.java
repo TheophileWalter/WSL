@@ -6,18 +6,18 @@ package tw.walter.stack.tokens;
  */
 public class TKeyword implements Token {
 
-    private String name;
-    
-    public TKeyword(String name) {
-        this.name = name;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public String toString() {
-        return "TKeyword<" + name + ">";
-    }
-    
+	private String name;
+
+	public TKeyword(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String toString() {
+		return "TKeyword<" + name + ">";
+	}
+
 }

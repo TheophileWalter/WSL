@@ -10,20 +10,20 @@ import tw.walter.stack.tokens.*;
  * Duplicate the element on top of the stack
  */
 public class FCopy implements WFunction {
-    
-    public static final String name = "copy";
 
-    @Override
-    public boolean execute(Stack<Token> s) {
-        try {
-            Token a = s.pop();
-            s.add(a);
-            s.add(a);
-        } catch (EmptyStackException e) {
-            System.err.println("Error: Function \"" + name + "\": the stack contains less than one element!");
-            return false;
-        }
-        return true;
-    }
+	public static final String name = "copy";
+
+	@Override
+	public boolean execute(Stack<Token> s) {
+		try {
+			Token a = s.pop();
+			s.add(a);
+			s.add(a);
+		} catch (EmptyStackException e) {
+			System.err.println("Error: Function \"" + name + "\": the stack contains less than one element!");
+			return false;
+		}
+		return true;
+	}
 
 }

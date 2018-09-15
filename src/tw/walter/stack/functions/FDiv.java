@@ -19,7 +19,7 @@ public class FDiv implements WFunction {
         try {
             Token b = s.pop(), a = s.pop();
             if (!(a instanceof TNumber) || !(b instanceof TNumber)) {
-                System.err.println("Error: Function \"" + name + "\" excpect two numbers!");
+				System.err.println("Error: Function \"" + name + "\" excpect two numbers!");
                 return false;
             }
             double ac = ((TNumber)a).getValue(), bc = ((TNumber)b).getValue();

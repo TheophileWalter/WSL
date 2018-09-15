@@ -31,6 +31,8 @@ public class WFunctionsList {
 		add("max", new FMax());
 		add("equal", new FEqual());
 		add("dup", new FDup());
+		add("number", new FNumber());
+		add("exit", new FExit());
 
 	}
 

@@ -47,7 +47,7 @@ public class Tokenizer {
 			}
 
 			// A number
-			else if (isNumber(c)) {
+			else if (isNumberStart(c)) {
 				if (!numberLoop(c)) {
 					tokens = null;
 					return;
@@ -235,6 +235,10 @@ public class Tokenizer {
 
 	public static boolean isLetter(char c) {
 		return (c >= 65 && c <= 90) || (c >= 97 && c <= 122);
+	}
+	
+	public static boolean isNumberStart(char c) {
+		return c == '-' || isNumber(c);
 	}
 
 	public static boolean isNumber(char c) {

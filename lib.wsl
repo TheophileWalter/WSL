@@ -98,9 +98,16 @@
         1 iflt
     ) def
 
-    ** Print the stack
-    ** Warning: this will clear the stack!
-    "print" ((uprintln) size 1 sub repeat) def
+    ** Copy the entire stack
+    "copy" (size dup) def
+
+    ** Print the stack without deleting it
+    "print" (
+        ** Copy the stack
+        stack.copy
+        ** Print the copied elements (and remove them)
+        (uprintln) size 1 sub 2 div repeat
+    ) def
 
 ) def stack
 
@@ -108,9 +115,10 @@
 "test" (
 
     ** Pass if the top value is 1
-    ** Exit and print an error if the value is 0
-    ** The error message is the second stack value
+    ** Exit and print an error if the second value is 0
+    ** The error message is the first stack value
     "assert_true" (
+        exch
         ** Code executed if true
         (pop) exch
         ** Code executed if false
@@ -121,9 +129,23 @@
 
     ** Pass if the top value is 0
     ** Exit and print an error if the value is 1
-    ** The error message is the second stack value
+    ** The error message is the first stack value
     "assert_false" (
-        not test.assert_true
+        exch not exch test.assert_true
+    ) def
+
+    ** Pass if two values are equals
+    ** Exit and print an error if not
+    ** The error message is the first stack value
+    "assert_equal" (
+        2 mb equal exch test.assert_true
+    ) def
+
+    ** Pass if two values are not equals
+    ** Exit and print an error if they are
+    ** The error message is the first stack value
+    "assert_not_equal" (
+        2 mb equal not exch test.assert_true
     ) def
 
 ) def test

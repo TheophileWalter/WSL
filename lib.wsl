@@ -8,17 +8,26 @@
 
 
 ** Commons
-"println"  ("\n" concat print) def              ** Print a string with a new line
-"uprint"   (string print) def                   ** Print any type
-"uprintln" (string println) def                 ** Print any type with a new line
+"println"  ("\n" concat print)              def ** Print a string with a new line
+"uprint"   (string print)                   def ** Print any type
+"uprintln" (string println)                 def ** Print any type with a new line
 "uconcat"  (string exch string exch concat) def ** Concatenate any type as a string
-"exch"     (1 mb) def                           ** Exchange the two first values on the stack
-"copy"     (1 dup) def                          ** Copy the value on top of the stack
+"exch"     (1 mb)                           def ** Exchange the two first values on the stack
+"copy"     (1 dup)                          def ** Copy the value on top of the stack
 
 ** Alias
-"sum" (add) def
-"true" 1 def
-"false" 0 def
+"sum"         (add)    def
+"substract"   (sub)    def
+"multiply"    (mul)    def
+"divide"      (div)    def
+"concatenate" (concat) def
+"square_root" (sqrt)   def
+"move_back"   (mb)     def
+"minimum"     (min)    def
+"maximum"     (max)    def
+"duplicate"   (dup)    def
+"true"        1        def
+"false"       0        def
 
 ** Logical operations
 "not" ((false) exch (true) exch if) def ** Negation
@@ -93,7 +102,7 @@
     "fill" (
         ** If the parameter is 0, we pop the value to fill
         copy
-        (pop) exch ** Code if the parameter is <1
+        (pop pop) exch ** Code if the parameter is <1
         ((copy) exch 1 sub repeat) exch ** Code if greater than >=1
         1 iflt
     ) def
@@ -152,11 +161,11 @@
 
 ** Informations
 "wsl" (
-    "version" "1.0 alpha" def
-    "is_alpha" true def
-    "is_beta" false def
-    "version_code" 1 def
-    "lib_version" "1.0" def
-    "lib_version_code" 1 def
-    "copyright" "Copyright 2018 - Théophile Walter" def
+    "version"          "1.0 alpha"                         def
+    "version_code"      1                                  def
+    "is_alpha"          true                               def
+    "is_beta"           false                              def
+    "lib_version"      "1.0"                               def
+    "lib_version_code"  1                                  def
+    "copyright"        "Copyright 2018 - Théophile Walter" def
 ) def wsl

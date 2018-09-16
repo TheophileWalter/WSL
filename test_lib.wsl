@@ -1,0 +1,51 @@
+**
+** WALTER STACK LANGUAGE
+** Test for the main library
+**
+** Version 1.0
+** Author Théophile Walter
+**
+
+** Check if the library version is compatible
+1 wsl.lib_version_code "\"test_lib.wsl\" error: incompatible library version" test.assert_equal
+
+** Empty the stack
+** The tests needs to be executed on an empty stack
+(pop) size 1 sub repeat
+
+** Test the functions
+
+** not
+false not "\"test_lib.wsl\" error: not" test.assert_true
+true not "\"test_lib.wsl\" error: not" test.assert_false
+
+** lt
+0 5 lt "\"test_lib.wsl\" error: lt" test.assert_true
+5 5 lt "\"test_lib.wsl\" error: lt" test.assert_false
+9 5 lt "\"test_lib.wsl\" error: lt" test.assert_false
+
+** gt
+0 5 gt "\"test_lib.wsl\" error: gt" test.assert_false
+5 5 gt "\"test_lib.wsl\" error: gt" test.assert_false
+9 5 gt "\"test_lib.wsl\" error: gt" test.assert_true
+
+** Math
+math.pi math.deg 180 "\"test_lib.wsl\" error: math.rad" test.assert_equal
+180 math.rad math.pi "\"test_lib.wsl\" error: math.rad" test.assert_equal
+2 0 math.pow 1 "\"test_lib.wsl\" error: math.pow" test.assert_equal
+2 1 math.pow 2 "\"test_lib.wsl\" error: math.pow" test.assert_equal
+2 8 math.pow 256 "\"test_lib.wsl\" error: math.pow" test.assert_equal
+
+** Stack
+stack.empty size 0 "\"test_lib.wsl\" error: stack.empty" test.assert_equal
+0 1 2 3 4 5 stack.empty size 0 "\"test_lib.wsl\" error: stack.empty" test.assert_equal
+5 0 stack.fill size 0 "\"test_lib.wsl\" error: stack.fill" test.assert_equal
+5 3 stack.fill (5 "\"test_lib.wsl\" error: stack.fill" test.assert_equal) 3 repeat
+size 0 "\"test_lib.wsl\" error: stack.fill" test.assert_equal ** Makes sure that there is no too much elements
+17 42 69 stack.copy
+(
+    69 "\"test_lib.wsl\" error: stack.copy" test.assert_equal
+    42 "\"test_lib.wsl\" error: stack.copy" test.assert_equal
+    17 "\"test_lib.wsl\" error: stack.copy" test.assert_equal
+) 2 repeat
+size 0 "\"test_lib.wsl\" error: stack.copy" test.assert_equal ** Makes sure that there is no too much elements

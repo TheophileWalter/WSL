@@ -49,3 +49,9 @@ size 0 "\"test_lib.wsl\" error: stack.fill" test.assert_equal ** Makes sure that
     17 "\"test_lib.wsl\" error: stack.copy" test.assert_equal
 ) 2 repeat
 size 0 "\"test_lib.wsl\" error: stack.copy" test.assert_equal ** Makes sure that there is no too much elements
+
+** Boolean
+0 boolean.to_string "false" "\"test_lib.wsl\" error: boolean.to_string" test.assert_equal
+1 boolean.to_string "true" "\"test_lib.wsl\" error: boolean.to_string" test.assert_equal
+"true" boolean.from_string 1 "\"test_lib.wsl\" error: boolean.from_string" test.assert_equal
+"false" boolean.from_string 0 "\"test_lib.wsl\" error: boolean.from_string" test.assert_equal

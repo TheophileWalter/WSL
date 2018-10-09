@@ -14,25 +14,25 @@ public class WFunctionsList {
 		list = new HashMap<>();
 
 		// Add the functions
-		add("add", new FAdd());
-		add("sub", new FSub());
-		add("mul", new FMul());
-		add("div", new FDiv());
-		add("string", new FString());
-		add("concat", new FConcat());
-		add("print", new FPrint());
-		//add("exch", new FExch()); // Use mb instead (lib.wsl defines an alias to use "exch")
-		add("pop", new FPop());
+		add("add",    new FAdd()    );
+		add("sub",    new FSub()    );
+		add("mul",    new FMul()    );
+		add("div",    new FDiv()    );
+		add("string", new FString() );
+		add("concat", new FConcat() );
+		add("print",  new FPrint()  );
+		add("pop",    new FPop()    );
+		add("sqrt",   new FSqrt()   );
+		add("size",   new FSize()   );
+		add("mb",     new FMb()     );
+		add("min",    new FMin()    );
+		add("max",    new FMax()    );
+		add("equal",  new FEqual()  );
+		add("dup",    new FDup()    );
+		add("number", new FNumber() );
+		add("exit",   new FExit()   );
 		//add("copy", new FCopy()); // Use dup instead (lib.wsl defines an alias to use "copy")
-		add("sqrt", new FSqrt());
-		add("size", new FSize());
-		add("mb", new FMb());
-		add("min", new FMin());
-		add("max", new FMax());
-		add("equal", new FEqual());
-		add("dup", new FDup());
-		add("number", new FNumber());
-		add("exit", new FExit());
+		//add("exch", new FExch()); // Use mb instead (lib.wsl defines an alias to use "exch")
 
 	}
 

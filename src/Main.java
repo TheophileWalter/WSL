@@ -26,7 +26,7 @@ public class Main {
 		
 		wsl.execute("\"Tests passed\" uprintln");
 		
-		wsl.execute("\"stack\" \"false\" boolean.from_string uprintln stack.print");
+		wsl.execute("\"print\" copy call");
 		
 		//wsl.__debug_print_env();
 

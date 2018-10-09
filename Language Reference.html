@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Walter Stack Language - Reference</title>
+		<style>
+			body {
+				font-family: sans-serif;
+			}
+			.indent {
+				margin-left: 50px;
+			}
+			code {
+				font-size: 16px;
+			}
+		</style>
+	</head>
+	<body>
+		The Walter Stack Language is a LIFO stack based language.<br />
+		All the data and codes are stored in this stack.<br />
+		The language functions and keywords allows you to compute operations on that stack.<br />
+		<br />
+		Data types<br />
+		There is five data type in WSL:
+		<ul>
+			<li><code><b>^Number</b></code><br />
+				Represents a number (integer or float)<br />
+				<u>Example</u>: <code>0 1 42 5.2 -4 -5.78</code><br />
+			</li><br />
+			<li><code><b>^Boolean</b></code><br />
+				Represents a boolean (0 or 1)<br />
+				This is a subset of <code>^Number</code><br />
+				<u>Example</u>: <code>0 1</code><br />
+				<code>true</code> and <code>false</code> are defined in <i>lib.wsl</i><br />
+			</li><br />
+			<li><code><b>^String</b></code><br />
+				Represents a string<br />
+				<u>Example</u>: <code>"Hello world!"</code><br />
+			</li><br />
+			<li><code><b>^Group</b></code><br />
+				Represents a group of instructions<br />
+				To put a new group in the stack, write code inside parenthesis<br />
+				<u>Example</u>: <code>("Hello" print)</code><br />
+			</li><br />
+			<li><code><b>^Keyword</b></code><br />
+				Represents a function or a keyword name<br />
+				A keyword cannot being put in the stack, it will be called instead<br />
+				<u>Example</u>: <code>keyword</code><br />
+			</li><br />
+		</ul>
+		Language keywords
+		<ul>
+			<li>
+				<b>def</b><br />
+				<code>^String -> ^Group -> def</code><br />
+				Define a group to be called later<br />
+				<u>Example</u>: <code>"group" ("Hello" print) def ** You can now call the code with the keyword "group"</code><br />
+				If the definition is in a group, the name will be prefixed with the parent group name<br />
+				<u>Example</u>: <code>"g1" ("g2" ("Hello" print) def) def ** You must call g2 with the name g1.g2</code><br />
+			</li><br />
+			<li>
+				<b>global</b><br />
+				<code>^String -> ^Group -> def</code><br />
+				Same as <code>def</code> but if the definition is in a group, the name will not be prefixed<br />
+			</li><br />
+			<li>
+				<b>exec</b><br />
+				<code>^Group -> exec</code><br />
+				Execute the given group<br />
+				<u>Example</u>: <code>("Hello" print) exec ** Will print "Hello"</code><br />
+			</li><br />
+			<li>
+				<b>call</b><br />
+				<code>^String -> call</code><br />
+				Call a keyword, a function or a defined group from a string<br />
+				<u>Example</u>: <code>"Hello" (print) call ** Will print "Hello"</code><br />
+			</li><br />
+			<li>
+				<b>repeat</b><br />
+				<code>^Group -> ^Number -> repeat</code><br />
+				Repeat the code in the group a certain number of times<br />
+				<u>Example</u>: <code>("Hello" print) 5 repeat ** Will print "Hello" five times</code><br />
+			</li><br />
+			<li>
+				<b>if</b><br />
+				<code>^Group -> ^Group -> ^Boolean -> if</code><br />
+				Execute one of the two groups based on the boolean value<br />
+				<u>Examples</u>:<br />
+				<div class="indent">
+					<code>("123") ("456") 1 if print ** Will print "123"</code><br />
+					<code>("123") ("456") 0 if print ** Will print "456"</code><br />
+				</div>
+			</li>
+		</ul>
+	</body>
+</html>

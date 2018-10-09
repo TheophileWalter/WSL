@@ -65,10 +65,13 @@ public class Interpretor {
 				String name = ((TKeyword) t).getName();
 
 				// First, check for the language keywords
-				if ("def".equals(name)) {
+				if ("def".equals(name) || "global".equals(name)) {
 
 					// Try to add the keyword to the environment
 					try {
+						
+						// Global or local
+						boolean isGlobal = "global".equals(name);
 
 						// Get the elements
 						Token code = stack.pop(), newName = stack.pop();
@@ -99,8 +102,8 @@ public class Interpretor {
 							return -5;
 						} else {
 
-							// Add the group to the environment
-							env.put((groupName == null ? "" : groupName + ".") + stringName, code);
+							// Add the group to the environment with the correct group name
+							env.put((groupName == null || isGlobal ? "" : groupName + ".") + stringName, code);
 
 						}
 
@@ -142,6 +145,42 @@ public class Interpretor {
 						return -7;
 					}
 
+				}
+				
+				// If it's a call order (call a function or group from a string containing it's name)
+				else if ("call".equals(name)) {
+					
+					// Execute the function from the name
+					try {
+
+						Token a = stack.pop();
+
+						// Check the type, only a string can be called
+						// To execute a group use "exec"
+						if (!(a instanceof TString)) {
+
+							System.err.println("Error: Keyword \"call\" excpect a string!");
+							return -15;
+
+						}
+
+						// Execute with a single keyword
+						String callName = ((TString) a).getValue();
+						ArrayList<Token> singleton = new ArrayList<Token>();
+						singleton.add(new TKeyword(callName));
+						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
+						int exitCode = newIt.execute(singleton);
+
+						// Check for an error
+						if (exitCode != 0) {
+							return exitCode;
+						}
+
+					} catch (EmptyStackException e) {
+						System.err.println("Error: Keyword \"call\": the stack contains less than one element!");
+						return -14;
+					}
+					
 				}
 				
 				// If it's a loop

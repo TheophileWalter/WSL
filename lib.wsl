@@ -14,6 +14,17 @@
 "uconcat"  (string exch string exch concat) def ** Concatenate any type as a string
 "exch"     (1 mb)                           def ** Exchange the two first values on the stack
 "copy"     (1 dup)                          def ** Copy the value on top of the stack
+"static" (
+    ** Copy the group name
+    exch copy
+    ** Reorder the stack
+    (2 mb) 2 repeat
+    ** Define the group globaly
+    ** (to avoid that the defined group name starts with "static.")
+    global
+    ** Call it once to evaluate it's inside values
+    call
+) def
 
 ** Alias
 "sum"         (add)    def
@@ -88,7 +99,7 @@
         1 iflt
     ) def
 
-) def math
+) static
 
 ** Operations on the stack
 "stack" (
@@ -118,7 +129,7 @@
         (uprintln) size 1 sub 2 div repeat
     ) def
 
-) def stack
+) static
 
 ** Tests utilities
 "test" (
@@ -157,15 +168,15 @@
         2 mb equal not exch test.assert_true
     ) def
 
-) def test
+) static
 
 ** Informations
 "wsl" (
-    "version"          "1.0 alpha"                         def
-    "version_code"      1                                  def
-    "is_alpha"          true                               def
-    "is_beta"           false                              def
+    "version"          "1.0 beta"                          def
+    "version_code"      10                                 def
+    "is_alpha"          false                              def
+    "is_beta"           true                               def
     "lib_version"      "1.0"                               def
-    "lib_version_code"  1                                  def
+    "lib_version_code"  10                                 def
     "copyright"        "Copyright 2018 - Théophile Walter" def
-) def wsl
+) static

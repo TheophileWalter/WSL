@@ -25,6 +25,8 @@ public class Main {
 		
 		wsl.execute("\"Tests passed\" uprintln");
 		
+		wsl.execute("\"hi\" \"println\" call");
+		
 		//wsl.__debug_print_env();
 
 	}

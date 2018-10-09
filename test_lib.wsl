@@ -7,7 +7,7 @@
 **
 
 ** Check if the library version is compatible
-1 wsl.lib_version_code "\"test_lib.wsl\" error: incompatible library version" test.assert_equal
+10 wsl.lib_version_code "\"test_lib.wsl\" error: incompatible library version" test.assert_equal
 
 ** Empty the stack
 ** The tests needs to be executed on an empty stack

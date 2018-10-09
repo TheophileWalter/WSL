@@ -9,6 +9,7 @@ public class Main {
 		
 		/*
 		 * TODO
+		 * prompt: User input from stdin
 		 */
 
 		WSL wsl = new WSL();
@@ -25,12 +26,13 @@ public class Main {
 		
 		wsl.execute("\"Tests passed\" uprintln");
 		
-		wsl.execute("\"hi\" \"println\" call");
+		wsl.execute("\"stack\" \"false\" boolean.from_string uprintln stack.print");
 		
 		//wsl.__debug_print_env();
 
 	}
 
+	// Read an entire file
 	public static String readFile(String path) {
 		try {
 			File file = new File(path);

@@ -114,7 +114,7 @@
         ** If the parameter is 0, we pop the value to fill
         copy
         (pop pop) exch ** Code if the parameter is <1
-        ((copy) exch 1 sub repeat) exch ** Code if greater than >=1
+        ((copy) exch 1 sub repeat) exch ** Code if the parameter is >=1
         1 iflt
     ) def
 
@@ -127,6 +127,35 @@
         stack.copy
         ** Print the copied elements (and remove them)
         (uprintln) size 1 sub 2 div repeat
+    ) def
+
+) static
+
+** Boolean utilities
+"boolean" (
+
+    ** Converts from string: "true" or "false"
+    "from_string" (
+        ** Copy the string (to check "false")
+        copy 
+        ** Code executed if the string is "true" (pop the copy and put true)
+        (pop true) exch
+        ** Code executed if the string is not "true"
+        (
+            ** Code executed if string if "false"
+            (false) exch
+            ** Code executed if string is not "false"
+            ("Error: \"boolean.from_string\" expect \"true\" or \"false\"!" println 0 exit) exch
+            ** Condition
+            "false" equal if
+        ) exch
+        ** First condition
+        "true" equal if
+    ) def
+
+    ** Converts boolean to string
+    "to_string" (
+        ("false") ("true") 2 mb exch if
     ) def
 
 ) static

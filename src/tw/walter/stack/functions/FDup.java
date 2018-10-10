@@ -9,7 +9,7 @@ import tw.walter.stack.tokens.*;
  * Walter Stack Language - Source code of "dup" function
  * Duplicate the n elements in the stack
  * Example: "1 2 3 4 5 2 dup" will copy "4" and "5"
- *          The stack will be "1 2 3 4 3 4"
+ *          The stack will be "1 2 3 4 5 4 5"
  */
 public class FDup implements WFunction {
 

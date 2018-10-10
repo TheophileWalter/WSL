@@ -26,7 +26,7 @@ public class Main {
 		
 		wsl.execute("\"Tests passed\" uprintln");
 		
-		wsl.execute("\"print\" copy call");
+		wsl.execute("(\"Hello\" print) string println");
 		
 		//wsl.__debug_print_env();
 

@@ -7,7 +7,7 @@ import tw.walter.stack.tokens.*;
 
 /*
  * Walter Stack Language - Source code of "mul" function
- * Multiplies two numbers
+ * Multiply two numbers
  */
 public class FMul implements WFunction {
 

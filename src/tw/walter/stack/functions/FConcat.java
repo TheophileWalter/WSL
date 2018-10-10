@@ -8,7 +8,7 @@ import tw.walter.stack.tokens.*;
 /*
  * Walter Stack Language - Source code of "concat" function
  * Concatenate two strings
- * Example: "a b concat" will display "ab"
+ * Example: "a b concat" will give "ab"
  */
 public class FConcat implements WFunction {
 

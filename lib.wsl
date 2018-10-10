@@ -6,7 +6,6 @@
 ** Author Théophile Walter
 **
 
-
 ** Commons
 "println"  ("\n" concat print)              def ** Print a string with a new line
 "uprint"   (string print)                   def ** Print any type

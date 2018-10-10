@@ -200,8 +200,7 @@ There is five data type in WSL
 <h3>Examples</h3>
 <i>Note that the examples require the default language library "lib.wsl"</i><br /><br />
 <b>Example #1:</b> The Fibonacci sequence<br />
-<code>
-<pre>** Define a group called "fibonacci"
+<code><pre>** Define a group called "fibonacci"
 "fibonacci" (
 	** Create a code that will be executed the required number of times
 	(
@@ -223,11 +222,8 @@ There is five data type in WSL
 0 1 7 fibonacci
 
 ** Print the stack
-stack.pretty_print</pre>
-</code><br />
+stack.pretty_print</pre></code><br />
 <b>Example #2:</b> The Fibonacci sequence (uncommented version)<br />
-<code>
-<pre>"fibonacci" ((2 dup sum) exch repeat) def
+<code><pre>"fibonacci" ((2 dup sum) exch repeat) def
 
-0 1 7 fibonacci stack.pretty_print</pre>
-</code><br />
+0 1 7 fibonacci stack.pretty_print</pre></code><br />

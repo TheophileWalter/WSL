@@ -58,6 +58,12 @@
 		<h3>Language keywords</h3>
 		<ul>
 			<li>
+				<b>call</b><br />
+				<code>^String -> call</code><br />
+				Call a keyword, a function or a defined group from a string<br />
+				<u>Example</u>: <code>"Hello" (print) call ** Will print "Hello"</code><br />
+			</li><br />
+			<li>
 				<b>def</b><br />
 				<code>^String -> ^Group -> def</code><br />
 				Define a group to be called later<br />
@@ -66,27 +72,15 @@
 				<u>Example</u>: <code>"g1" ("g2" ("Hello" print) def) def ** You must call g2 with the name g1.g2</code><br />
 			</li><br />
 			<li>
-				<b>global</b><br />
-				<code>^String -> ^Group -> def</code><br />
-				Same as <code>def</code> but if the definition is in a group, the name will not be prefixed<br />
-			</li><br />
-			<li>
 				<b>exec</b><br />
 				<code>^Group -> exec</code><br />
 				Execute the given group<br />
 				<u>Example</u>: <code>("Hello" print) exec ** Will print "Hello"</code><br />
 			</li><br />
 			<li>
-				<b>call</b><br />
-				<code>^String -> call</code><br />
-				Call a keyword, a function or a defined group from a string<br />
-				<u>Example</u>: <code>"Hello" (print) call ** Will print "Hello"</code><br />
-			</li><br />
-			<li>
-				<b>repeat</b><br />
-				<code>^Group -> ^Number -> repeat</code><br />
-				Repeat the code in the group a certain number of times<br />
-				<u>Example</u>: <code>("Hello" print) 5 repeat ** Will print "Hello" five times</code><br />
+				<b>global</b><br />
+				<code>^String -> ^Group -> def</code><br />
+				Same as <code>def</code> but if the definition is in a group, the name will not be prefixed<br />
 			</li><br />
 			<li>
 				<b>if</b><br />
@@ -97,6 +91,12 @@
 					<code>("123") ("456") 1 if print ** Will print "123"</code><br />
 					<code>("123") ("456") 0 if print ** Will print "456"</code><br />
 				</div>
+			</li><br />
+			<li>
+				<b>repeat</b><br />
+				<code>^Group -> ^Number -> repeat</code><br />
+				Repeat the code in the group a certain number of times<br />
+				<u>Example</u>: <code>("Hello" print) 5 repeat ** Will print "Hello" five times</code><br />
 			</li><br />
 		</ul>
 		<h3>Built-in functions</h3>

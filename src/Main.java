@@ -23,10 +23,9 @@ public class Main {
 
 		wsl.execute(readFile("lib.wsl"));
 		wsl.execute(readFile("test_lib.wsl"));
-		
 		wsl.execute("\"Tests passed\" uprintln");
 		
-		wsl.execute("(\"Hello\" print) string println");
+		wsl.execute(readFile("fibo.txt"));
 		
 		//wsl.__debug_print_env();
 

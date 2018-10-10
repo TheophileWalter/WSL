@@ -128,6 +128,52 @@
         (uprintln) size 1 sub 2 div repeat
     ) def
 
+    ** Print the stack with a given separator without deleting it
+    "print_sep" (
+        ** Get the size and copy the stack
+        size stack.copy
+        ** Prepare the printing code
+        (
+            ** Saves the separator
+            copy 2 mb
+            ** Concatenate the value and the separator
+            uconcat
+            ** Print the value
+            print
+        ) exch
+        ** Repeat the printing code
+        1 sub repeat
+        ** Removes unused elements
+        pop pop
+    ) def
+
+    ** Reverse the full stack
+    "rev" (
+        ** Big group, the code will be executed only if there are some values in the stack
+        (
+            ** The size of the stack (two times, one is a value to decrement)
+            size copy
+            ** The code that reverse the stack one by one
+            (
+                ** Decrement the counter and move it back
+                1 sub copy 2 mb
+                ** Move the value back
+                1 add mb
+            ) exch
+            ** Repeat it
+            repeat
+            ** Clean up the stack (remove the counter that shall be at 0)
+            pop
+        ) ()
+        ** Execute if the stack is bigger than 3 (the two groups and at least two elements)
+        size 2 gt if
+    ) def
+
+    ** Print the stack in the "real" order separated with spaces
+    "pretty_print" (
+        stack.rev " " stack.print_sep stack.rev
+    ) def
+
 ) static
 
 ** Boolean utilities

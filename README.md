@@ -197,3 +197,37 @@ There is five data type in WSL
     <u>Example</u>: <code>5 7 sub ** Will put -2 in the stack</code><br />
   </li><br />
 </ul>
+<h3>Examples</h3>
+<i>Note that the examples require the default language library "lib.wsl"</i><br /><br />
+<b>Example #1:</b> The Fibonacci sequence<br />
+<code>
+<pre>** Define a group called "fibonacci"
+"fibonacci" (
+	** Create a code that will be executed the required number of times
+	(
+		** Copy the two previous values
+		2 dup
+		** Sum them
+		sum
+	)
+	** Invert the code group and the repetition times to be able
+	** to call "repeat" with parameters in the correct order
+	exch
+	** Now the stack contains a group and a number,
+	** so we can call "repeat" to execute the code
+	** the desired number of time
+	repeat
+) def
+
+** Compute the 7 values of Fibonacci sequence after 0 and 1
+0 1 7 fibonacci
+
+** Print the stack
+stack.pretty_print</pre>
+</code><br />
+<b>Example #2:</b> The Fibonacci sequence (uncommented version)<br />
+<code>
+<pre>"fibonacci" ((2 dup sum) exch repeat) def
+
+0 1 7 fibonacci stack.pretty_print</pre>
+</code><br />

@@ -43,7 +43,7 @@ There is five data type in WSL
     <b>call</b><br />
     <code>^String -> call</code><br />
     Call a keyword, a function or a defined group from a string<br />
-    <u>Example</u>: <code>"Hello" (print) call ** Will print "Hello"</code><br />
+    <u>Example</u>: <code>"Hello" "print" call ** Will print "Hello"</code><br />
   </li><br />
   <li>
     <b>def</b><br />

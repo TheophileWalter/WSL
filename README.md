@@ -227,3 +227,5 @@ stack.pretty_print</pre><br />
 <pre>"fibonacci" ((2 dup sum) exch repeat) def
 
 0 1 7 fibonacci stack.pretty_print</pre><br />
+<b>Example #3:</b> Recursive call<br />
+<pre>10 "rec" (copy uprintln 1 sub copy (rec) exch () exch 0 ifgt) def rec</pre><br />

@@ -183,7 +183,7 @@ There is five data type in WSL
   <li>
     <b>string</b><br />
     <code>^a' -> string -> ^String</code><br />
-    COnvert any value to a string<br />
+    Convert any value to a string<br />
     <u>Examples</u>:
       <div class="indent">
         <code>456 string ** Will put "456" in the stack</code><br />

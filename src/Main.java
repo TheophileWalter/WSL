@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Scanner;
 
 import tw.walter.stack.WSL;
 
@@ -10,6 +11,13 @@ public class Main {
 		/*
 		 * TODO
 		 * prompt: User input from stdin
+		 * random: [0,1] float random number
+		 * Group "number" in wsl.lib
+		 *   - "nan"
+		 *   - "not_a_number"
+		 *   - "is_nan"
+		 * Group "string"
+		 * ... one group per data type kois
 		 */
 
 		WSL wsl = new WSL();
@@ -25,7 +33,15 @@ public class Main {
 		wsl.execute(readFile("test_lib.wsl"));
 		wsl.execute("\"Tests passed\" uprintln");
 		
-		wsl.execute(readFile("fibo.txt"));
+		// WSL top level
+		@SuppressWarnings( "resource" )
+		Scanner scanner = new Scanner(System.in);
+		while (true) {
+		    // Get the line and execute it
+		    System.out.print("\nwsl> ");
+		    String inputString = scanner.nextLine();
+		    wsl.execute(inputString);
+		}
 		
 		//wsl.__debug_print_env();
 

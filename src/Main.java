@@ -18,6 +18,9 @@ public class Main {
 		 *   - "is_nan"
 		 * Group "string"
 		 * ... one group per data type kois
+		 * Stacktrace for errors
+		 * Including files
+		 * Pretty reccursive string value for TGroup
 		 */
 
 		WSL wsl = new WSL();

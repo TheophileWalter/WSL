@@ -41,6 +41,9 @@
 
 ** Logical operations
 "not" ((false) exch (true) exch if) def ** Negation
+"and" (add 2 equal) def
+"or" (sum 0 gt) def
+"xor" (sum 1 equal) def
 "nif" (not if) def ** Inversed if
 ** Is a number is lower than another
 "lt" (
@@ -240,7 +243,7 @@
     ** Exit and print an error if they are
     ** The error message is the first stack value
     "assert_not_equal" (
-        2 mb equal not exch test.assert_true
+        2 mb equal exch test.assert_false
     ) def
 
 ) static

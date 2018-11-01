@@ -80,6 +80,14 @@ There is five data type in WSL
     Repeat the code in the group a certain number of times<br />
     <u>Example</u>: <code>("Hello" print) 5 repeat ** Will print "Hello" five times</code><br />
   </li><br />
+  <li>
+    <b>static</b><br />
+    <code>^String -> ^Group -> static</code><br />
+    Define a static group to be called later<br />
+    A static group is a group that contains only sub-groups declarations, it will be executed one time right after the declaration to evaluate the sub-groups<br />
+    <u>Example</u>: <code>"group" ("sub1" ("hello") def "sub2" ("world") def) static ** You can now call the codes with the keywords "group.sub1" and "group.sub2"</code><br />
+    If the definition is in a group, the name will be prefixed with the parent group name (as for <code>def</code>)<br />
+  </li><br />
 </ul>
 <h3>Built-in functions</h3>
 <ul>

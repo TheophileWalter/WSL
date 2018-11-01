@@ -43,7 +43,7 @@ There is five data type in WSL
     <b>call</b><br />
     <code>^String -> call</code><br />
     Call a keyword, a function or a defined group from a string<br />
-    <u>Example</u>: <code>"Hello" (print) call ** Will print "Hello"</code><br />
+    <u>Example</u>: <code>"Hello" "print" call ** Will print "Hello"</code><br />
   </li><br />
   <li>
     <b>def</b><br />
@@ -183,7 +183,7 @@ There is five data type in WSL
   <li>
     <b>string</b><br />
     <code>^a' -> string -> ^String</code><br />
-    COnvert any value to a string<br />
+    Convert any value to a string<br />
     <u>Examples</u>:
       <div class="indent">
         <code>456 string ** Will put "456" in the stack</code><br />
@@ -227,3 +227,5 @@ stack.pretty_print</pre><br />
 <pre>"fibonacci" ((2 dup sum) exch repeat) def
 
 0 1 7 fibonacci stack.pretty_print</pre><br />
+<b>Example #3:</b> Recursive call<br />
+<pre>10 "rec" (copy uprintln 1 sub copy (rec) exch () exch 0 ifgt) def rec</pre><br />

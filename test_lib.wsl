@@ -15,9 +15,25 @@
 
 ** Test the functions
 
+** Logical operators
 ** not
 false not "\"test_lib.wsl\" error: not" test.assert_true
 true not "\"test_lib.wsl\" error: not" test.assert_false
+** and
+false false and "\"test_lib.wsl\" error: and" test.assert_false
+false true and "\"test_lib.wsl\" error: and" test.assert_false
+true false and "\"test_lib.wsl\" error: and" test.assert_false
+true true and "\"test_lib.wsl\" error: and" test.assert_true
+** or
+false false or "\"test_lib.wsl\" error: or" test.assert_false
+false true or "\"test_lib.wsl\" error: or" test.assert_true
+true false or "\"test_lib.wsl\" error: or" test.assert_true
+true true or "\"test_lib.wsl\" error: or" test.assert_true
+** xor
+false false xor "\"test_lib.wsl\" error: xor" test.assert_false
+false true xor "\"test_lib.wsl\" error: xor" test.assert_true
+true false xor "\"test_lib.wsl\" error: xor" test.assert_true
+true true xor "\"test_lib.wsl\" error: xor" test.assert_false
 
 ** lt
 0 5 lt "\"test_lib.wsl\" error: lt" test.assert_true

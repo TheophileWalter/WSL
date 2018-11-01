@@ -41,6 +41,10 @@
 
 ** Logical operations
 "not" ((false) exch (true) exch if) def ** Negation
+"and" (add 2 equal) def
+"or" (sum 0 gt) def
+"xor" (sum 1 equal) def
+"nif" (not if) def ** Inversed if
 ** Is a number is lower than another
 "lt" (
     ** False if the two numbers are equals
@@ -64,7 +68,7 @@
     equal if
 ) def
 "iflt" (lt if) def ** If lower than, example: "(1) (2) 0 5 iflt" will put 1 in the stack
-"iflg" (gt if) def ** If greater than, example: "(1) (2) 0 5 ifgt" will put 2 in the stack
+"ifgt" (gt if) def ** If greater than, example: "(1) (2) 0 5 ifgt" will put 2 in the stack
 
 ** Mathematics group
 "math" (
@@ -104,8 +108,8 @@
 "stack" (
 
     ** Empty the stack
-    ** Must remove 1 because the (pop) group is counted by size
-    "empty" ((pop) size 1 sub repeat) def
+    ** Get the stack size before adding the (pop) group
+    "empty" (size (pop) exch repeat) def
 
     ** Fill the stact with given element
     ** Example: "0 10 stack.fill" will put 10 times the number 0 in the stack
@@ -166,7 +170,7 @@
             pop
         ) ()
         ** Execute if the stack is bigger than 3 (the two groups and at least two elements)
-        size 2 gt if
+        size 2 ifgt
     ) def
 
     ** Print the stack in the "real" order separated with spaces
@@ -239,7 +243,7 @@
     ** Exit and print an error if they are
     ** The error message is the first stack value
     "assert_not_equal" (
-        2 mb equal not exch test.assert_true
+        2 mb equal exch test.assert_false
     ) def
 
 ) static

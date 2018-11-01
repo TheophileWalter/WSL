@@ -169,6 +169,12 @@ There is five data type in WSL
     <u>Example</u>: <code>"Hello" print ** Will print "Hello"</code><br />
   </li><br />
   <li>
+    <b>random</b><br />
+    <code>random -> ^Number</code><br />
+    Put an float random number in the stack (between 0 and 1 included)<br />
+    <u>Example</u>: <code>"Random float: " random uconcat println</code><br />
+  </li><br />
+  <li>
     <b>size</b><br />
     <code>size -> ^Number</code><br />
     Put the size of the stack in the stack<br />

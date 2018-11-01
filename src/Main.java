@@ -11,16 +11,10 @@ public class Main {
 		/*
 		 * TODO
 		 * prompt: User input from stdin
-		 * random: [0,1] float random number
-		 * Group "number" in wsl.lib
-		 *   - "nan"
-		 *   - "not_a_number"
-		 *   - "is_nan"
 		 * Group "string"
 		 * ... one group per data type kois
 		 * Stacktrace for errors
 		 * Including files
-		 * Pretty reccursive string value for TGroup
 		 */
 
 		WSL wsl = new WSL();

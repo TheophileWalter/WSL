@@ -39,17 +39,6 @@ public class Interpretor {
 	 */
 	public int execute(ArrayList<Token> instructions) {
 
-		// Create new stack and env if there is no given
-		/*
-		 * if (groupName == null) {
-		 * 
-		 * // Create a new stack stack = new Stack<>();
-		 * 
-		 * // Create the environment env = new HashMap<>();
-		 * 
-		 * }
-		 */
-
 		// Read the instructions
 		for (Token t : instructions) {
 
@@ -65,13 +54,15 @@ public class Interpretor {
 				String name = ((TKeyword) t).getName();
 
 				// First, check for the language keywords
-				if ("def".equals(name) || "global".equals(name)) {
+				if ("def".equals(name) || "global".equals(name) || "static".equals(name)) {
 
 					// Try to add the keyword to the environment
 					try {
 						
-						// Global or local
+						// Global or not
 						boolean isGlobal = "global".equals(name);
+						// Static or not
+						boolean isStatic = "static".equals(name);
 
 						// Get the elements
 						Token code = stack.pop(), newName = stack.pop();
@@ -97,13 +88,24 @@ public class Interpretor {
 							}
 						}
 						if (error) {
-							System.err.println("Error: Keyword \"def\": the chosen name \"" + stringName
+							System.err.println("Error: Keyword \"" + name + "\": the chosen name \"" + stringName
 									+ "\" is not compatible with the keyword format!");
 							return -5;
 						} else {
 
 							// Add the group to the environment with the correct group name
-							env.put((groupName == null || isGlobal ? "" : groupName + ".") + stringName, code);
+							String finalName = (groupName == null || isGlobal ? "" : groupName + ".") + stringName;
+							env.put(finalName, code);
+							
+							// If the group is created with "static", call it once
+							if (isStatic) {
+								
+								int returnCode = execute_from_env(stack, env, finalName);
+								if (returnCode != 0) {
+									return returnCode;
+								}
+								
+							}
 
 						}
 
@@ -285,30 +287,9 @@ public class Interpretor {
 						// If it's a user defined group
 						if (env.containsKey(name)) {
 
-							// Create a new interpretor, and execute the code on the current stack
-							Interpretor newIt = new Interpretor(stack, env, name);
-
-							Token c = env.get(name);
-
-							try {
-
-								// Execute (prepare an ArrayList if needed
-								int exitCode = 0;
-								if (c instanceof TGroup) {
-									exitCode = newIt.execute(((TGroup) c).getList());
-								} else {
-									ArrayList<Token> l2 = new ArrayList<>();
-									l2.add(c);
-									exitCode = newIt.execute(l2);
-								}
-								if (exitCode != 0) {
-									return exitCode;
-								}
-
-								// Prevent stack overflow
-							} catch (StackOverflowError e) {
-								System.err.println("Error: Stack overflow while calling \"" + name + "\"!");
-								return -6;
+							int code = execute_from_env(stack, env, name);
+							if (code != 0) {
+								return code;
 							}
 
 						}
@@ -336,6 +317,39 @@ public class Interpretor {
 		}
 
 		return 0;
+	}
+	
+	// Execute a user defined group
+	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name) {
+		
+		// Create a new interpretor, and execute the code on the current stack
+		Interpretor newIt = new Interpretor(stack, env, name);
+
+		Token c = env.get(name);
+
+		try {
+
+			// Execute (prepare an ArrayList if needed)
+			int exitCode = 0;
+			if (c instanceof TGroup) {
+				exitCode = newIt.execute(((TGroup) c).getList());
+			} else {
+				ArrayList<Token> l2 = new ArrayList<>();
+				l2.add(c);
+				exitCode = newIt.execute(l2);
+			}
+			if (exitCode != 0) {
+				return exitCode;
+			}
+
+			// Prevent stack overflow
+		} catch (StackOverflowError e) {
+			System.err.println("Error: Stack overflow while calling \"" + name + "\"!");
+			return -6;
+		}
+		
+		return 0;
+		
 	}
 
 	public void __debug_print_env() {

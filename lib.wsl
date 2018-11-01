@@ -13,17 +13,6 @@
 "uconcat"  (string exch string exch concat) def ** Concatenate any type as a string
 "exch"     (1 mb)                           def ** Exchange the two first values on the stack
 "copy"     (1 dup)                          def ** Copy the value on top of the stack
-"static" (
-    ** Copy the group name
-    exch copy
-    ** Reorder the stack
-    (2 mb) 2 repeat
-    ** Define the group globaly
-    ** (to avoid that the defined group name starts with "static.")
-    global
-    ** Call it once to evaluate it's inside values
-    call
-) def
 
 ** Alias
 "sum"         (add)    def
@@ -206,7 +195,35 @@
     "to_string" (
         ("false") ("true") 2 mb exch if
     ) def
+    
+    ** Random boolean
+    "random" (
+        random 0.5 lt
+    ) def
 
+) static
+
+** Numbers utilities
+** Different from "math" group
+"number" (
+
+    ** Not a number
+    "nan" (
+        "NaN" number
+    ) def
+    "not_a_number" (number.nan) def
+
+    ** Check if a value is NaN
+    "isnan" (
+        copy equal not
+    ) def
+    "is_not_a_number" (number.isnan) def
+
+) static
+
+** String utilities
+"string" (
+    ** TODO
 ) static
 
 ** Tests utilities

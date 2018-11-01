@@ -76,3 +76,7 @@ size 0 "\"test_lib.wsl\" error: stack.rev" test.assert_equal ** Makes sure that 
 1 boolean.to_string "true" "\"test_lib.wsl\" error: boolean.to_string" test.assert_equal
 "true" boolean.from_string 1 "\"test_lib.wsl\" error: boolean.from_string" test.assert_equal
 "false" boolean.from_string 0 "\"test_lib.wsl\" error: boolean.from_string" test.assert_equal
+
+** Number
+number.nan number.isnan "\"test_lib.wsl\" error: number.nan" test.assert_true
+1 number.isnan "\"test_lib.wsl\" error: number.isnan" test.assert_false

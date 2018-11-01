@@ -17,7 +17,11 @@ public class TString implements Token {
 	}
 
 	public String toString() {
-		return "TString<" + value + ">";
+		return "TString<\"" + escaped() + "\">";
+	}
+	
+	public String escaped() {
+		return value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
 	}
 
 }

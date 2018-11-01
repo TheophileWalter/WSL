@@ -26,7 +26,12 @@ public class TGroup implements Token, Iterable<Token>, Iterator<Token> {
 	}
 
 	public String toString() {
-		return "TGroup<...>";
+		String content = "";
+		for (Token t: elements) {
+			content += t.toString() + " ";
+		}
+		content = content.substring(0, content.length() > 0 ? content.length()-1 : 0);
+		return "TGroup<" + content + ">";
 	}
 
 	public ArrayList<Token> getList() {

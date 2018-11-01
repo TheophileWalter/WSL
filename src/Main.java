@@ -25,7 +25,8 @@ public class Main {
 		wsl.execute(readFile("test_lib.wsl"));
 		wsl.execute("\"Tests passed\" uprintln");
 		
-		wsl.execute(readFile("fibo.txt"));
+		wsl.execute("\"fibonacci\" ((2 dup sum) exch repeat) def");
+		wsl.execute("0 1 255 fibonacci stack.pretty_print");
 		
 		//wsl.__debug_print_env();
 

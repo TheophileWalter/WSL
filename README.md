@@ -259,8 +259,8 @@ stack.pretty_print</pre><br />
 0 1 7 fibonacci stack.pretty_print</pre><br />
 <b>Example #3:</b> Recursive call<br />
 <pre>10 "rec" (copy uprintln 1 sub copy (rec) exch () exch 0 ifgt) def rec</pre><br />
-<b>Example #4:</b> Usage of "this"<br />
-The group "this" is defined in the standard library, it can be used to call a group defined in the current group without knowing the name of this current group.<br />
+<b>Example #4:</b> Usage of <code>this</code><br />
+The group <code>this</code> is defined in the standard library, it can be used to call a group defined in the current group without knowing the name of this current group.<br />
 It can be used for recursive call with a non-stack paradigm<br />
 <br />
 Here is a recursive call example in javascript :<br />
@@ -291,7 +291,7 @@ And here is the equivalent code in WSL with <code>this</code><br />
 	()
 	** Condition on arguments
 	"n" this "max" this lf if
-
+  
 ) def
 
 ** Call it with the parameters in the stack

@@ -3,6 +3,7 @@ package tw.walter.stack.functions;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import tw.walter.stack.CallStack;
 import tw.walter.stack.tokens.*;
 
 /*
@@ -14,7 +15,7 @@ public class FString implements WFunction {
 	public static final String name = "string";
 
 	@Override
-	public boolean execute(Stack<Token> s) {
+	public boolean execute(Stack<Token> s, CallStack callStack) {
 		try {
 			Token a = s.pop();
 
@@ -37,11 +38,11 @@ public class FString implements WFunction {
 			} else if (a instanceof TString) {
 				s.push(a);
 			} else {
-				System.err.println("Error: Unknown type for conversion to string!");
+				System.err.println("Error: Unknown type for conversion to string!\n" + callStack.toString());
 				return false;
 			}
 		} catch (EmptyStackException e) {
-			System.err.println("Error: Function \"" + name + "\": the stack contains less than one element!");
+			System.err.println("Error: Function \"" + name + "\": the stack contains less than one element!\n" + callStack.toString());
 			return false;
 		}
 		return true;

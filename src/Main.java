@@ -11,7 +11,6 @@ public class Main {
 		 * prompt: User input from stdin
 		 * Group "string"
 		 * ... one group per data type kois
-		 * Stacktrace for errors
 		 * Including files
 		 */
 
@@ -35,7 +34,7 @@ public class Main {
 		    // Get the line and execute it
 		    System.out.print("\nwsl> ");
 		    String inputString = scanner.nextLine();
-		    wsl.execute(inputString);
+		    wsl.execute(inputString, "<stdin>");
 		}
 		
 		//wsl.__debug_print_env();

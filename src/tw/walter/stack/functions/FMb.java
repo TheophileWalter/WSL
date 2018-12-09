@@ -3,6 +3,7 @@ package tw.walter.stack.functions;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import tw.walter.stack.CallStack;
 import tw.walter.stack.tokens.*;
 
 /*
@@ -16,13 +17,13 @@ public class FMb implements WFunction {
 	public static final String name = "mb";
 
 	@Override
-	public boolean execute(Stack<Token> s) {
+	public boolean execute(Stack<Token> s, CallStack callStack) {
 		try {
 			
 			// Get the parameters
 			Token back = s.pop(), value = s.pop();
 			if (!(back instanceof TNumber)) {
-				System.err.println("Error: Function \"" + name + "\" excpect a number!");
+				System.err.println("Error: Function \"" + name + "\" excpect a number!\n" + callStack.toString());
 				return false;
 			}
 			
@@ -40,7 +41,7 @@ public class FMb implements WFunction {
 			}
 			
 		} catch (EmptyStackException e) {
-			System.err.println("Error: Function \"" + name + "\": the stack does not contains enought elements!");
+			System.err.println("Error: Function \"" + name + "\": the stack does not contains enought elements!\n" + callStack.toString());
 			return false;
 		}
 		return true;

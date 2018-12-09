@@ -2,6 +2,7 @@ package tw.walter.stack.functions;
 
 import java.util.Stack;
 
+import tw.walter.stack.CallStack;
 import tw.walter.stack.tokens.TNumber;
 import tw.walter.stack.tokens.Token;
 
@@ -14,7 +15,7 @@ public class FSize implements WFunction {
 	public static final String name = "size";
 
 	@Override
-	public boolean execute(Stack<Token> s) {
+	public boolean execute(Stack<Token> s, CallStack callStack) {
 		s.add(new TNumber((double) s.size()));
 		return true;
 	}

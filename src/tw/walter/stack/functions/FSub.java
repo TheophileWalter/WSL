@@ -3,6 +3,7 @@ package tw.walter.stack.functions;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import tw.walter.stack.CallStack;
 import tw.walter.stack.tokens.*;
 
 /*
@@ -15,7 +16,7 @@ public class FSub implements WFunction {
 	public static final String name = "sub";
 
 	@Override
-	public boolean execute(Stack<Token> s) {
+	public boolean execute(Stack<Token> s, CallStack callStack) {
 		try {
 			Token b = s.pop(), a = s.pop();
 			if (!(a instanceof TNumber) || !(b instanceof TNumber)) {

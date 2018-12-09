@@ -15,26 +15,38 @@ import tw.walter.stack.tokens.*;
  */
 public class Interpretor {
 
+	// The stack
 	private Stack<Token> stack;
+	
+	// List of bult-in functions
 	private WFunctionsList list;
+	
+	// User defined-groups
 	private HashMap<String, Token> env;
+	
+	// Names of current group and parent group
 	private String groupName;
 	private String parentName;
+	
+	// Call stack (for error printing)
+	private CallStack callStack;
 
-	public Interpretor(Stack<Token> stack, HashMap<String, Token> env, String groupName, String parentName) {
+	public Interpretor(Stack<Token> stack, HashMap<String, Token> env, CallStack callStack, String groupName, String parentName) {
 		this.stack = stack;
+		list = new WFunctionsList();
 		this.env = env;
 		this.groupName = groupName;
 		this.parentName = parentName;
-		list = new WFunctionsList();
+		this.callStack = callStack;
 	}
 
 	public Interpretor() {
+		stack = new Stack<>();
 		list = new WFunctionsList();
+		env = new HashMap<>();
 		groupName = null; // The first group is set to null to don't prefix the keywords
 		parentName = null;
-		stack = new Stack<>();
-		env = new HashMap<>();
+		callStack = new CallStack();
 	}
 
 	/*
@@ -55,6 +67,8 @@ public class Interpretor {
 			else if (t instanceof TKeyword) {
 
 				String name = ((TKeyword) t).getName();
+				String originSource = ((TKeyword) t).getOriginSource();
+				int originLine = ((TKeyword) t).getOriginLine();
 
 				// First, check for the language keywords
 				if ("def".equals(name) || "global".equals(name) || "static".equals(name)) {
@@ -72,7 +86,7 @@ public class Interpretor {
 
 						// Check the type
 						if (!(newName instanceof TString)) {
-							System.err.println("Error: Keyword \"def\" excpects a string as second stack value!");
+							System.err.println("Error: Keyword \"" + name + "\" excpects a string as second stack value!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -4;
 						}
 
@@ -92,7 +106,7 @@ public class Interpretor {
 						}
 						if (error) {
 							System.err.println("Error: Keyword \"" + name + "\": the chosen name \"" + stringName
-									+ "\" is not compatible with the keyword format!");
+									+ "\" is not compatible with the keyword format!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -5;
 						} else {
 
@@ -103,7 +117,7 @@ public class Interpretor {
 							// If the group is created with "static", call it once
 							if (isStatic) {
 								
-								int returnCode = execute_from_env(stack, env, finalName, groupName);
+								int returnCode = execute_from_env(stack, env, finalName, groupName, (TKeyword) t);
 								if (returnCode != 0) {
 									return returnCode;
 								}
@@ -114,7 +128,7 @@ public class Interpretor {
 
 						// Catch the stack error
 					} catch (EmptyStackException e) {
-						System.err.println("Error: Keywork \"def\": the stack contains less than two elements!");
+						System.err.println("Error: Keywork \"def\": the stack contains less than two elements!\n" + callStack.getFullStack(name, originSource, originLine));
 						return -3;
 					}
 
@@ -131,13 +145,13 @@ public class Interpretor {
 						// Check the type, only a group can be executed
 						if (!(a instanceof TGroup)) {
 
-							System.err.println("Error: Keyword \"exec\" excpect an instruction group!");
+							System.err.println("Error: Keyword \"exec\" excpect an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -8;
 
 						}
 
 						// Execute
-						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(((TGroup) a).getList());
 
 						// Check for an error
@@ -146,7 +160,7 @@ public class Interpretor {
 						}
 
 					} catch (EmptyStackException e) {
-						System.err.println("Error: Keyword \"exec\": the stack contains less than one element!");
+						System.err.println("Error: Keyword \"exec\": the stack contains less than one element!\n" + callStack.getFullStack(name, originSource, originLine));
 						return -7;
 					}
 
@@ -164,7 +178,7 @@ public class Interpretor {
 						// To execute a group use "exec"
 						if (!(a instanceof TString)) {
 
-							System.err.println("Error: Keyword \"call\" excpect a string!");
+							System.err.println("Error: Keyword \"call\" excpect a string!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -15;
 
 						}
@@ -173,7 +187,7 @@ public class Interpretor {
 						String callName = ((TString) a).getValue();
 						ArrayList<Token> singleton = new ArrayList<Token>();
 						singleton.add(new TKeyword(callName));
-						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(singleton);
 
 						// Check for an error
@@ -182,7 +196,7 @@ public class Interpretor {
 						}
 
 					} catch (EmptyStackException e) {
-						System.err.println("Error: Keyword \"call\": the stack contains less than one element!");
+						System.err.println("Error: Keyword \"call\": the stack contains less than one element!\n" + callStack.getFullStack(name, originSource, originLine));
 						return -14;
 					}
 					
@@ -199,13 +213,13 @@ public class Interpretor {
 						// Check the type, only a group can be executed
 						if (!(code instanceof TGroup) || !(number instanceof TNumber)) {
 
-							System.err.println("Error: Keyword \"repeat\" excpect a number and an instruction group!");
+							System.err.println("Error: Keyword \"repeat\" excpect a number and an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -10;
 
 						}
 
 						// Execute...
-						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = 0, max = (int)((TNumber) number).getValue();
 						ArrayList<Token> repeatInstructions = ((TGroup) code).getList();
 						
@@ -220,7 +234,7 @@ public class Interpretor {
 						}
 
 					} catch (EmptyStackException e) {
-						System.err.println("Error: Keyword \"repeat\": the stack contains less than two elements!");
+						System.err.println("Error: Keyword \"repeat\": the stack contains less than two elements!\n" + callStack.getFullStack(name, originSource, originLine));
 						return -9;
 					}
 					
@@ -237,7 +251,7 @@ public class Interpretor {
 						// Check the types
 						if (!(condition instanceof TNumber) || !(ifGroup instanceof TGroup) || !(elseGroup instanceof TGroup)) {
 
-							System.err.println("Error: Keyword \"if\" excpect a number and two instruction groups!");
+							System.err.println("Error: Keyword \"if\" excpect a number and two instruction groups!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -12;
 
 						}
@@ -245,12 +259,12 @@ public class Interpretor {
 						// Check the condition value
 						double conditionValue = ((TNumber) condition).getValue();
 						if (conditionValue != 0. && conditionValue != 1.) {
-							System.err.println("Error: Keyword \"if\" excpect 0 or 1 as condition argument!");
+							System.err.println("Error: Keyword \"if\" excpect 0 or 1 as condition argument!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -13;
 						}
 
 						// Execute...
-						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						ArrayList<Token> ifInstructions = ((TGroup) (conditionValue == 1. ? ifGroup : elseGroup)).getList();
 						
 						// ...based on the evaluation
@@ -262,7 +276,7 @@ public class Interpretor {
 						}
 
 					} catch (EmptyStackException e) {
-						System.err.println("Error: Keyword \"if\": the stack contains less than three elements!");
+						System.err.println("Error: Keyword \"if\": the stack contains less than three elements!\n" + callStack.getFullStack(name, originSource, originLine));
 						return -11;
 					}
 					
@@ -292,7 +306,7 @@ public class Interpretor {
 					if (function != null) {
 
 						// Execute the function on the current stack
-						if (!function.execute(stack)) {
+						if (!function.execute(stack, callStack.add(name, originSource, originLine))) {
 							return -2;
 						}
 
@@ -304,7 +318,7 @@ public class Interpretor {
 						// If it's a user defined group
 						if (env.containsKey(name)) {
 
-							int code = execute_from_env(stack, env, name, groupName);
+							int code = execute_from_env(stack, env, name, groupName, (TKeyword) t);
 							if (code != 0) {
 								return code;
 							}
@@ -313,7 +327,7 @@ public class Interpretor {
 
 						// Else, fail
 						else {
-							System.err.println("Error: Undefined function name \"" + name + "\"!");
+							System.err.println("Error: Undefined function name \"" + name + "\"!\n" + callStack.getFullStack(name, originSource, originLine));
 							return -1;
 						}
 
@@ -337,10 +351,15 @@ public class Interpretor {
 	}
 	
 	// Execute a user defined group
-	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name, String parent) {
+	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name, String parent, TKeyword t) {
+		
+		// Get informations about the token
+		String tName = t.getName();
+		String tSource = t.getOriginSource();
+		int tLine = t.getOriginLine();
 		
 		// Create a new interpretor, and execute the code on the current stack
-		Interpretor newIt = new Interpretor(stack, env, name, parent);
+		Interpretor newIt = new Interpretor(stack, env, callStack.add(tName,  tSource, tLine), name, parent);
 
 		Token c = env.get(name);
 
@@ -361,7 +380,7 @@ public class Interpretor {
 
 			// Prevent stack overflow
 		} catch (StackOverflowError e) {
-			System.err.println("Error: Stack overflow while calling \"" + name + "\"!");
+			System.err.println("Error: Stack overflow while calling \"" + name + "\"!\n" + callStack.getFullStack(tName, tSource, tLine));
 			return -6;
 		}
 		

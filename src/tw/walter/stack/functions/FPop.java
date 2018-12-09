@@ -3,6 +3,7 @@ package tw.walter.stack.functions;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import tw.walter.stack.CallStack;
 import tw.walter.stack.tokens.Token;
 
 /*
@@ -14,11 +15,11 @@ public class FPop implements WFunction {
 	public static final String name = "pop";
 
 	@Override
-	public boolean execute(Stack<Token> s) {
+	public boolean execute(Stack<Token> s, CallStack callStack) {
 		try {
 			s.pop();
 		} catch (EmptyStackException e) {
-			System.err.println("Error: Function \"" + name + "\": the stack contains less than one element!");
+			System.err.println("Error: Function \"" + name + "\": the stack contains less than one element!\n" + callStack.toString());
 			return false;
 		}
 		return true;

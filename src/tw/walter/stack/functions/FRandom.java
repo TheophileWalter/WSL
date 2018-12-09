@@ -2,6 +2,7 @@ package tw.walter.stack.functions;
 
 import java.util.Stack;
 
+import tw.walter.stack.CallStack;
 import tw.walter.stack.tokens.*;
 
 /*
@@ -13,7 +14,7 @@ public class FRandom implements WFunction {
 	public static final String name = "random";
 
 	@Override
-	public boolean execute(Stack<Token> s) {
+	public boolean execute(Stack<Token> s, CallStack callStack) {
 		s.push(new TNumber(Math.random()));
 		return true;
 	}

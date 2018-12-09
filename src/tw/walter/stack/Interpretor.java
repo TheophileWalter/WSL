@@ -19,17 +19,20 @@ public class Interpretor {
 	private WFunctionsList list;
 	private HashMap<String, Token> env;
 	private String groupName;
+	private String parentName;
 
-	public Interpretor(Stack<Token> stack, HashMap<String, Token> env, String groupName) {
+	public Interpretor(Stack<Token> stack, HashMap<String, Token> env, String groupName, String parentName) {
 		this.stack = stack;
 		this.env = env;
 		this.groupName = groupName;
+		this.parentName = parentName;
 		list = new WFunctionsList();
 	}
 
 	public Interpretor() {
 		list = new WFunctionsList();
 		groupName = null; // The first group is set to null to don't prefix the keywords
+		parentName = null;
 		stack = new Stack<>();
 		env = new HashMap<>();
 	}
@@ -100,7 +103,7 @@ public class Interpretor {
 							// If the group is created with "static", call it once
 							if (isStatic) {
 								
-								int returnCode = execute_from_env(stack, env, finalName);
+								int returnCode = execute_from_env(stack, env, finalName, groupName);
 								if (returnCode != 0) {
 									return returnCode;
 								}
@@ -134,7 +137,7 @@ public class Interpretor {
 						}
 
 						// Execute
-						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(((TGroup) a).getList());
 
 						// Check for an error
@@ -170,7 +173,7 @@ public class Interpretor {
 						String callName = ((TString) a).getValue();
 						ArrayList<Token> singleton = new ArrayList<Token>();
 						singleton.add(new TKeyword(callName));
-						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(singleton);
 
 						// Check for an error
@@ -202,7 +205,7 @@ public class Interpretor {
 						}
 
 						// Execute...
-						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
 						int exitCode = 0, max = (int)((TNumber) number).getValue();
 						ArrayList<Token> repeatInstructions = ((TGroup) code).getList();
 						
@@ -247,7 +250,7 @@ public class Interpretor {
 						}
 
 						// Execute...
-						Interpretor newIt = new Interpretor(stack, env, groupName); // Execute in the same group name
+						Interpretor newIt = new Interpretor(stack, env, groupName, parentName); // Execute in the same group name
 						ArrayList<Token> ifInstructions = ((TGroup) (conditionValue == 1. ? ifGroup : elseGroup)).getList();
 						
 						// ...based on the evaluation
@@ -263,6 +266,20 @@ public class Interpretor {
 						return -11;
 					}
 					
+				}
+				
+				// If it's a prefix getter
+				else if ("group_prefix".equals(name)) {
+					
+					String prefix = groupName == null ? "" : groupName + ".";
+					stack.push(new TString(prefix));
+					
+				// Parent prefix getter
+				} else if ("parent_prefix".equals(name)) {
+					
+					String prefix = parentName == null ? "" : parentName + ".";
+					stack.push(new TString(prefix));
+
 				}
 
 				// If it's not a language keyword
@@ -287,7 +304,7 @@ public class Interpretor {
 						// If it's a user defined group
 						if (env.containsKey(name)) {
 
-							int code = execute_from_env(stack, env, name);
+							int code = execute_from_env(stack, env, name, groupName);
 							if (code != 0) {
 								return code;
 							}
@@ -320,10 +337,10 @@ public class Interpretor {
 	}
 	
 	// Execute a user defined group
-	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name) {
+	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name, String parent) {
 		
 		// Create a new interpretor, and execute the code on the current stack
-		Interpretor newIt = new Interpretor(stack, env, name);
+		Interpretor newIt = new Interpretor(stack, env, name, parent);
 
 		Token c = env.get(name);
 

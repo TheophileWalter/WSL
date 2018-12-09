@@ -32,8 +32,6 @@ public class WFunctionsList {
 		add("number", new FNumber() );
 		add("exit",   new FExit()   );
 		add("random", new FRandom() );
-		//add("copy", new FCopy()); // Use dup instead (lib.wsl defines an alias to use "copy")
-		//add("exch", new FExch()); // Use mb instead (lib.wsl defines an alias to use "exch")
 
 	}
 

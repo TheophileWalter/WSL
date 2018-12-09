@@ -65,6 +65,14 @@ There is five data type in WSL
     Same as <code>def</code> but if the definition is in a group, the name will not be prefixed<br />
   </li><br />
   <li>
+    <b>group_prefix</b><br />
+    <code>group_prefix -> ^String</code><br />
+    Put the prefix of the current group in the stack<br />
+    The prefix is the name of the currently executed group with a final dot<br />
+    If this keyword is called outside a group, it will return an empty string<br />
+    <u>Example</u>: <code>"g1" ("g2" (group_prefix print) def) static g1.g2 ** Will print "g1.g2."</code><br />
+  </li><br />
+  <li>
     <b>if</b><br />
     <code>^Group -> ^Group -> ^Boolean -> if</code><br />
     Execute one of the two groups based on the boolean value<br />
@@ -73,6 +81,14 @@ There is five data type in WSL
       <code>("123") ("456") 1 if print ** Will print "123"</code><br />
       <code>("123") ("456") 0 if print ** Will print "456"</code><br />
     </div>
+  </li><br />
+  <li>
+    <b>parent_prefix</b><br />
+    <code>parent_prefix -> ^String</code><br />
+    Put the prefix of the parent group in the stack<br />
+    The prefix is the name of the group that called the currently executed group with a final dot<br />
+    If this keyword is called outside a group, or if the parent is not a group, it will return an empty string<br />
+    <u>Example</u>: <code>"a" (parent_prefix print) def "foo" ("bar" (a) def) static foo.bar ** Will print "foo.bar."</code><br />
   </li><br />
   <li>
     <b>repeat</b><br />
@@ -243,3 +259,45 @@ stack.pretty_print</pre><br />
 0 1 7 fibonacci stack.pretty_print</pre><br />
 <b>Example #3:</b> Recursive call<br />
 <pre>10 "rec" (copy uprintln 1 sub copy (rec) exch () exch 0 ifgt) def rec</pre><br />
+<b>Example #4:</b> Usage of "this"<br />
+The group "this" is defined in the standard library, it can be used to call a group defined in the current group without knowing the name of this current group.<br />
+It can be used for recursive call with a non-stack paradigm<br />
+<br />
+Here is a recursive call example in javascript :<br />
+<pre>function rec(n, max) {
+	if (n < max) {
+		console.log(n);
+		rec(n+1, max);
+	}
+}
+rec(0, 10);</pre><br />
+<br />
+And here is the equivalent code in WSL with <code>this</code><br />
+<pre>"rec" (
+	
+	** Get the given parameters from the stack (in reversed order)
+	"max" exch def
+	"n" exch def
+	
+	** The code of the function
+	
+	** If group
+	(
+		** We call the "n" group defined above
+		"n" this uprintln
+		"n" this 1 add "max" this rec
+	)
+	** Else group
+	()
+	** Condition on arguments
+	"n" this "max" this lf if
+
+) def
+
+** Call it with the parameters in the stack
+0 10 rec</pre><br />
+<br />
+This code works well because at each recursive call, the current group name is modified. So the <code>n</code> group is called <code>rec.n</code> at first call, <code>rec.rec.n</code> at the second, <i>ect</i>.<br />
+So every group created in each recursive call has an unique name and can be identified with <code>this</code><br />
+<b>Warning</b>: If you use <code>this</code> in groups called with others functions (eg: <code>iflt</code>) it won't work because the group called will be <code>iflt.n</code>.<br />
+To avoir these problems, use the stack as much as possible and use <code>this</code> as a last resort and only if you understand prefectly how it works.<br />

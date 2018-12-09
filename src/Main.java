@@ -15,8 +15,6 @@ public class Main {
 		 * ... one group per data type kois
 		 * Stacktrace for errors
 		 * Including files
-		 * "this" to lib.wsl -> call the given group with prefix (eg: `"pi" this` will call `math.pi` if called from "math" group)
-		 * ... "this" (parent_prefix exch concat call) def
 		 */
 
 		WSL wsl = new WSL();

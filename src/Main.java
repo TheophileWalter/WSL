@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Scanner;
 
 import tw.walter.stack.WSL;
@@ -26,8 +24,8 @@ public class Main {
 		//wsl.execute("\"mygroup\" (\"function\\n\" print \"sub\" 123 def) def \"test\\n\" print mygroup mygroup.sub string \"\\n\" concat print");
 		//wsl.execute("\"a\"(\"b\"(\"c\"(\"d\" \"coucou\" def)def a.b.c)def a.b)def a a.b.c.d print");
 
-		wsl.execute(readFile("lib.wsl"));
-		wsl.execute(readFile("test_lib.wsl"));
+		wsl.executeFile("lib.wsl");
+		wsl.executeFile("test_lib.wsl");
 		wsl.execute("\"Tests passed\" uprintln");
 		
 		// WSL top level
@@ -42,22 +40,6 @@ public class Main {
 		
 		//wsl.__debug_print_env();
 
-	}
-
-	// Read an entire file
-	public static String readFile(String path) {
-		try {
-			File file = new File(path);
-			FileInputStream fis = new FileInputStream(file);
-			byte[] data = new byte[(int) file.length()];
-			fis.read(data);
-			fis.close();
-
-			return new String(data, "UTF-8");
-		} catch (Exception e) {
-			System.err.println("Error: Unable to read file!");
-			return "";
-		}
 	}
 
 }

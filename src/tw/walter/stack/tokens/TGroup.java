@@ -12,6 +12,8 @@ public class TGroup implements Token, Iterable<Token>, Iterator<Token> {
 
 	private ArrayList<Token> elements;
 	private int count = -1;
+	private String originSource;
+	private int originLine;
 
 	public TGroup() {
 		elements = new ArrayList<>();
@@ -25,6 +27,7 @@ public class TGroup implements Token, Iterable<Token>, Iterator<Token> {
 		elements.add(t);
 	}
 
+	@Override
 	public String toString() {
 		String content = "";
 		for (Token t: elements) {
@@ -64,6 +67,26 @@ public class TGroup implements Token, Iterable<Token>, Iterator<Token> {
 	public Iterator<Token> iterator() {
 		count = -1; // Reset the counter
 		return this;
+	}
+
+	/*
+	 * Functions needed to implement Token
+	 */
+	
+	@Override
+	public void setOrigin(String source, int line) {
+		originSource = source;
+		originLine = line;
+	}
+
+	@Override
+	public String getOriginSource() {
+		return originSource;
+	}
+
+	@Override
+	public int getOriginLine() {
+		return originLine;
 	}
 
 }

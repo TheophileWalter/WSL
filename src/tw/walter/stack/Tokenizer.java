@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import tw.walter.stack.tokens.*;
 
-public class Tokenizer {
+public class Tokenizer implements StringConsumerListener {
 
 	private StringConsumer sc;
 	private ArrayList<Token> tokens;
+	private String source;
+	private int currentLine;
 
 	public Tokenizer() {
 	}
@@ -15,10 +17,20 @@ public class Tokenizer {
 	/*
 	 * Return a token list from a code string
 	 */
-	public ArrayList<Token> getTokens(String s) {
+	public ArrayList<Token> getTokens(String s, String source) {
+		return getTokens(s, source, 1);
+	}
+	public ArrayList<Token> getTokens(String s, String source, int currentLine) {
+		
+		// Set up the source informations
+		this.source = source;
+		this.currentLine = currentLine;
 
 		// Create a new StringConsumer
 		sc = new StringConsumer(s);
+		
+		// Set itself as a listener on the StringConsumer to increment or decrement the line count
+		sc.setListener(this);
 
 		// The token list to be returned
 		tokens = new ArrayList<>();
@@ -80,7 +92,7 @@ public class Tokenizer {
 
 			// A blank character (space, tabulation, new line)
 			else if (!isBlank(c)) {
-				System.err.println("Error: Unexpected character '" + c + "'!");
+				System.err.println("Error: Unexpected character '" + c + "'!\nSource \"" + source + "\" line " + currentLine);
 				tokens = null;
 				return;
 			}
@@ -94,6 +106,7 @@ public class Tokenizer {
 	 */
 	private boolean keywordLoop(char firstChar) {
 		String keyword = Character.toString(firstChar);
+		int lineAtStart = currentLine; // Saves the line number of the start of the keyword
 		char c = sc.get();
 		while (isKeyword(c)) {
 			keyword += c;
@@ -102,18 +115,21 @@ public class Tokenizer {
 		// Reverse last char (to be able to get it out of this function)
 		sc.reverse();
 		// Add the keyword to the result
-		tokens.add(new TKeyword(keyword));
+		TKeyword k = new TKeyword(keyword);
+		k.setOrigin(source, lineAtStart);
+		tokens.add(k);
 		return true;
 	}
 
 	private boolean numberLoop(char firstChar) {
 		String number = Character.toString(firstChar);
+		int lineAtStart = currentLine; // Saves the line number of the start of the number
 		boolean decimal = false;
 		char c = sc.get();
 		while (isNumber(c) || isDecimalSeparator(c)) {
 			// Two dots in a number is not possible
 			if (decimal && isDecimalSeparator(c)) {
-				System.err.println("Error: A decimal number must contains only one dot!");
+				System.err.println("Error: A decimal number must contains only one dot!\nSource \"" + source + "\" line " + currentLine);
 				return false;
 			} else if (isDecimalSeparator(c)) {
 				decimal = true;
@@ -124,18 +140,21 @@ public class Tokenizer {
 		// Reverse last char (to be able to get it out of this function)
 		sc.reverse();
 		// Add the keyword to the result
-		tokens.add(new TNumber(Double.parseDouble(number)));
+		TNumber n = new TNumber(Double.parseDouble(number));
+		n.setOrigin(source, lineAtStart);
+		tokens.add(n);
 		return true;
 	}
 
 	private boolean stringLoop(char firstChar) {
 		String string = ""; // Skip the first char (because it's a \")
+		int lineAtStart = currentLine; // Saves the line number of the start of the string
 		char c = sc.get();
 		while (!isStringDelimiter(c)) {
 
 			// Check for end of code
 			if (c == '\0') {
-				System.err.println("Error: End of stream reached while scaning string!");
+				System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
 				return false;
 			}
 
@@ -146,7 +165,7 @@ public class Tokenizer {
 				// Check for end of code
 				switch (c) {
 				case '\0':
-					System.err.println("Error: End of stream reached while scaning string!");
+					System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
 					return false;
 				case 'n':
 					c = '\n';
@@ -162,13 +181,16 @@ public class Tokenizer {
 		}
 		// No reverse needed because the last character is a \"
 		// Add the keyword to the result
-		tokens.add(new TString(string));
+		TString s = new TString(string);
+		s.setOrigin(source, lineAtStart);
+		tokens.add(s);
 		return true;
 	}
 
 	public boolean groupLoop(char firstChar) {
 
 		String string = ""; // Skip the first char
+		int lineAtStart = currentLine; // Saves the line number of the start of the group
 		// Reads the string in the group
 		char c = sc.get();
 		int balance = 0;
@@ -188,7 +210,7 @@ public class Tokenizer {
 
 			// Check for end of code
 			if (c == '\0') {
-				System.err.println("Error: End of stream reached while scaning group!");
+				System.err.println("Error: End of stream reached while scaning group!\nSource \"" + source + "\" line " + currentLine);
 				return false;
 			}
 
@@ -200,7 +222,7 @@ public class Tokenizer {
 
 		// Analyze the tokens in the group
 		Tokenizer ntk = new Tokenizer();
-		ArrayList<Token> groupList = ntk.getTokens(string);
+		ArrayList<Token> groupList = ntk.getTokens(string, source, lineAtStart);
 
 		// Check for an error
 		if (groupList == null) {
@@ -208,7 +230,9 @@ public class Tokenizer {
 		}
 
 		// Add the group to the result
-		tokens.add(new TGroup(groupList));
+		TGroup g = new TGroup(groupList);
+		g.setOrigin(source, lineAtStart);
+		tokens.add(g);
 
 		return true;
 	}
@@ -219,7 +243,21 @@ public class Tokenizer {
 
 		// A comment must start with two *
 		if (!isCommentStart(c)) {
-			System.err.println("Error: Unexpected character '" + c + "' after '*'!");
+			
+			// Special error if the character is a line break
+			String displayedC = Character.toString(c);
+			int displayedLine = currentLine;
+			if (isLineBreak(c)) {
+				if (c == '\n') {
+					displayedC = "\\n";
+				} else if (c == '\r') {
+					displayedC = "\\r";
+				}
+				displayedLine = currentLine-1;
+			}
+			
+			// Print the error
+			System.err.println("Error: Unexpected character '" + displayedC + "' after '*'!\nSource \"" + source + "\" line " + displayedLine);
 			return false;
 		}
 
@@ -287,6 +325,25 @@ public class Tokenizer {
 
 	public static boolean isCommentEnd(char c) {
 		return c == '\n' || c == '\r' || c == '\0';
+	}
+	
+	public static boolean isLineBreak(char c) {
+		return c == '\n' || c == '\r';
+	}
+	
+	// Functions used as a callback from StringConsumer
+	@Override
+	public void onStringConsumerGet(char c) {
+		if (isLineBreak(c)) {
+			currentLine++;
+		}
+	}
+
+	@Override
+	public void onStringConsumerReverse(char c) {
+		if (isLineBreak(c)) {
+			currentLine--;
+		}
 	}
 
 }

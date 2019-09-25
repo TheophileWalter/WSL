@@ -12,6 +12,7 @@ public class Main {
 		 * Group "string"
 		 * ... one group per data type kois
 		 * Including files
+		 * mmb function (to move back multiple values, ex: "0 0 0 0 8 9 2 3 mmb" -> "0 8 9 0 0 0")
 		 */
 
 		WSL wsl = new WSL();

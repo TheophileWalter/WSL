@@ -27,6 +27,7 @@ public class Main {
 	) exch repeat ** Repeat the number of time given in the stack
 	pop ** Remove the counter
 ) def
+		 * Remplacer group_prefix et parent_prefix par current et parent, et ajouter current_prefix et parent_prefix dans la lib en ajoutant le point final
 		 */
 
 		WSL wsl = new WSL();

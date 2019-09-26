@@ -13,6 +13,8 @@ public class Main {
 		 * ... one group per data type kois
 		 * Including files
 		 * mmb function (to move back multiple values, ex: "0 0 0 0 8 9 2 3 mmb" -> "0 8 9 0 0 0")
+		 * Ajouter mod et coder syrracuse en exemple
+		 * Ajouter fact au group math
 		 */
 
 		WSL wsl = new WSL();

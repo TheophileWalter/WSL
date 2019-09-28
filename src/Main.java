@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 import tw.walter.stack.WSL;
 
 public class Main {
@@ -15,7 +13,7 @@ public class Main {
 		 * mmb function (to move back multiple values, ex: "0 0 0 0 8 9 2 3 mmb" -> "0 8 9 0 0 0")
 		 * Ajouter mod et coder syrracuse en exemple
 		 * Ajouter fact au group math
-		 * Ajouter un mode pour gÃ©nÃ©rer un code texte Ã  partir d'une liste de tokens (mode compact ou indentÃ©)
+		 * Ajouter un mode pour générer un code texte à partir d'une liste de tokens (mode compact ou indenté)
 "fact" (
 	1 exch ** The result
 	1 exch ** The counter that will be incremented
@@ -30,7 +28,7 @@ public class Main {
 		 * Remplacer group_prefix et parent_prefix par current et parent, et ajouter current_prefix et parent_prefix dans la lib en ajoutant le point final
 		 */
 
-		WSL wsl = new WSL();
+		WSL wsl = new WSL(true);
 		// wsl.execute("123 456 add 789 sub string \"Hello world\\\" \\\\ \" concat print");
 
 		//wsl.execute("\"Hello\" \"world\" \" \" exch concat \"!\n\" concat concat print");
@@ -44,14 +42,7 @@ public class Main {
 		wsl.execute("\"Tests passed\" uprintln");
 		
 		// WSL top level
-		@SuppressWarnings( "resource" )
-		Scanner scanner = new Scanner(System.in);
-		while (true) {
-		    // Get the line and execute it
-		    System.out.print("\nwsl> ");
-		    String inputString = scanner.nextLine();
-		    wsl.execute(inputString, "<stdin>");
-		}
+		wsl.topLevel();
 		
 		//wsl.__debug_print_env();
 

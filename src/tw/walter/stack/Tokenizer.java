@@ -5,22 +5,40 @@ import java.util.ArrayList;
 import tw.walter.stack.tokens.*;
 
 public class Tokenizer implements StringConsumerListener {
+	
+	// Error constants
+	public static final int NO_ERROR = 0;
+	public static final int UNEXPECTED_CHARACTER_ERROR = 1;
+	public static final int MULTIPLE_DOTS_IN_DECIMAL_ERROR = 2;
+	public static final int END_OF_STREAM_IN_STRING_ERROR = 3;
+	public static final int END_OF_STREAM_IN_GROUP_ERROR = 4;
+	public static final int UNEXPECTED_CHARACTER_IN_COMMENT_ERROR = 5;
 
+	// Private attributes
 	private StringConsumer sc;
 	private ArrayList<Token> tokens;
 	private String source;
 	private int currentLine;
+	private boolean showError;
+	private boolean isTopLevel;
+	private int lastError;
 
-	public Tokenizer() {
+	public Tokenizer(boolean showError) {
+		this.showError = showError;
+		this.isTopLevel = isTopLevel;
 	}
 
 	/*
 	 * Return a token list from a code string
 	 */
-	public ArrayList<Token> getTokens(String s, String source) {
-		return getTokens(s, source, 1);
+	public ArrayList<Token> getTokens(String s, String source, boolean isTopLevel) {
+		return getTokens(s, source, isTopLevel, 1);
 	}
-	public ArrayList<Token> getTokens(String s, String source, int currentLine) {
+	public ArrayList<Token> getTokens(String s, String source, boolean isTopLevel, int currentLine) {
+		
+		// The last error
+		this.lastError = NO_ERROR;
+		this.isTopLevel = isTopLevel;
 		
 		// Set up the source informations
 		this.source = source;
@@ -39,6 +57,13 @@ public class Tokenizer implements StringConsumerListener {
 		mainLoop();
 
 		return tokens;
+	}
+	
+	/*
+	 * Get the last error code
+	 */
+	public int getLastError() {
+		return this.lastError;
 	}
 
 	/*
@@ -92,7 +117,10 @@ public class Tokenizer implements StringConsumerListener {
 
 			// A blank character (space, tabulation, new line)
 			else if (!isBlank(c)) {
-				System.err.println("Error: Unexpected character '" + c + "'!\nSource \"" + source + "\" line " + currentLine);
+				if (this.showError) {
+					System.err.println("Error: Unexpected character '" + c + "'!\nSource \"" + source + "\" line " + currentLine);
+				}
+				this.lastError = UNEXPECTED_CHARACTER_ERROR;
 				tokens = null;
 				return;
 			}
@@ -129,7 +157,10 @@ public class Tokenizer implements StringConsumerListener {
 		while (isNumber(c) || isDecimalSeparator(c)) {
 			// Two dots in a number is not possible
 			if (decimal && isDecimalSeparator(c)) {
-				System.err.println("Error: A decimal number must contains only one dot!\nSource \"" + source + "\" line " + currentLine);
+				if (this.showError) {
+					System.err.println("Error: A decimal number must contains only one dot!\nSource \"" + source + "\" line " + currentLine);
+				}
+				this.lastError = MULTIPLE_DOTS_IN_DECIMAL_ERROR;
 				return false;
 			} else if (isDecimalSeparator(c)) {
 				decimal = true;
@@ -154,7 +185,10 @@ public class Tokenizer implements StringConsumerListener {
 
 			// Check for end of code
 			if (c == '\0') {
-				System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
+				if (this.showError && !this.isTopLevel) {
+					System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
+				}
+				this.lastError = END_OF_STREAM_IN_STRING_ERROR;
 				return false;
 			}
 
@@ -165,7 +199,10 @@ public class Tokenizer implements StringConsumerListener {
 				// Check for end of code
 				switch (c) {
 				case '\0':
-					System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
+					if (this.showError && !this.isTopLevel) {
+						System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
+					}
+					this.lastError = END_OF_STREAM_IN_STRING_ERROR;
 					return false;
 				case 'n':
 					c = '\n';
@@ -210,7 +247,10 @@ public class Tokenizer implements StringConsumerListener {
 
 			// Check for end of code
 			if (c == '\0') {
-				System.err.println("Error: End of stream reached while scaning group!\nSource \"" + source + "\" line " + currentLine);
+				if (this.showError && !this.isTopLevel) {
+					System.err.println("Error: End of stream reached while scaning group!\nSource \"" + source + "\" line " + currentLine);
+				}
+				this.lastError = END_OF_STREAM_IN_GROUP_ERROR;
 				return false;
 			}
 
@@ -221,8 +261,8 @@ public class Tokenizer implements StringConsumerListener {
 		// No reverse needed because the last character is a closing character
 
 		// Analyze the tokens in the group
-		Tokenizer ntk = new Tokenizer();
-		ArrayList<Token> groupList = ntk.getTokens(string, source, lineAtStart);
+		Tokenizer ntk = new Tokenizer(this.showError);
+		ArrayList<Token> groupList = ntk.getTokens(string, source, this.isTopLevel, lineAtStart);
 
 		// Check for an error
 		if (groupList == null) {
@@ -257,7 +297,10 @@ public class Tokenizer implements StringConsumerListener {
 			}
 			
 			// Print the error
-			System.err.println("Error: Unexpected character '" + displayedC + "' after '*'!\nSource \"" + source + "\" line " + displayedLine);
+			if (this.showError) {
+				System.err.println("Error: Unexpected character '" + displayedC + "' after '*'!\nSource \"" + source + "\" line " + displayedLine);
+			}
+			this.lastError = UNEXPECTED_CHARACTER_IN_COMMENT_ERROR;
 			return false;
 		}
 

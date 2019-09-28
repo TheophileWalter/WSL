@@ -3,6 +3,7 @@ package tw.walter.stack;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import tw.walter.stack.tokens.*;
 
@@ -18,8 +19,8 @@ public class WSL {
 	/*
 	 * Constructor, instantiate the class
 	 */
-	public WSL() {
-		this.tk = new Tokenizer();
+	public WSL(boolean showError) {
+		this.tk = new Tokenizer(showError);
 		this.it = new Interpretor();
 	}
 
@@ -27,12 +28,15 @@ public class WSL {
 	 * Execute a code from a string Return the execution status code
 	 */
 	public int execute(String code) {
-		return execute(code, "<execute>");
+		return execute(code, "<execute>", false);
 	}
 	public int execute(String code, String source) {
+		return execute(code, source, false);
+	}
+	public int execute(String code, String source, boolean isTopLevel) {
 
 		// Get the token list
-		ArrayList<Token> tokens = this.tk.getTokens(code, source);
+		ArrayList<Token> tokens = this.tk.getTokens(code, source, isTopLevel);
 
 		// Check if the code has been parsed successfully
 		if (tokens == null) {
@@ -66,6 +70,41 @@ public class WSL {
 			System.err.println("Error: Unable to read file \"" + path + "\"");
 			return "";
 		}
+	}
+	
+	/*
+	 * Run an top-level interpretor in standard input/output
+	 */
+	public void topLevel() {
+		
+		// The scanner for reading stdin
+		@SuppressWarnings( "resource" )
+		Scanner scanner = new Scanner(System.in);
+		
+		// A string to save lave input in case of multiple line input
+		String lastInput = "";
+		
+		// Loop to execute every given lines
+		while (true) {
+			
+		    // Get the line and execute it
+		    if (lastInput == "") {
+		    	System.out.print("\nwsl> ");
+		    }
+		    String inputString = scanner.nextLine();
+		    int returnCode = this.execute(lastInput + "\n" + inputString, "<stdin>", true);
+		    
+		    // If the error is a end of stream error, we let the user print a new line
+		    if (returnCode == -1 &&
+		    		(this.tk.getLastError() == Tokenizer.END_OF_STREAM_IN_STRING_ERROR ||
+		    		this.tk.getLastError() == Tokenizer.END_OF_STREAM_IN_GROUP_ERROR)) {
+		    	lastInput += inputString + "\n";
+		    } else {
+		    	lastInput = "";
+		    }
+		    
+		}
+		
 	}
 
 	public void __debug_print_env() {

@@ -15,7 +15,35 @@ import tw.walter.stack.tokens.*;
  * Execute an array of tokens as a WSL code
  */
 public class Interpretor {
-
+	
+	// Error constants
+	public static final int NO_ERROR = 0;
+	public static final int UNDEFINED_FUNCTION_ERROR = -1;
+	public static final int FUNCTION_EXECUTION_ERROR = -2;
+	public static final int UNEXPECTED_OBJECT_ERROR = -3;
+	public static final int DEF_TOO_FEW_ELEMENTS_ERROR = -4;
+	public static final int DEF_STRING_EXPECTED_ERROR = -5;
+	public static final int DEF_WRONG_KEYWORD_FORMAT_ERROR = -6;
+	public static final int STACK_OVERFLOW_ERROR = -7;
+	public static final int EXEC_TOO_FEW_ELEMENTS_ERROR = -8;
+	public static final int EXEC_GROUP_EXPECTED_ERROR = -9;
+	public static final int REPEAT_TOO_FEW_ELEMENTS_ERROR = -10;
+	public static final int REPEAT_STRING_AND_GROUP_EXPECTED_ERROR = -11;
+	public static final int IF_TOO_FEW_ELEMENTS_ERROR = -12;
+	public static final int IF_NUMBER_AND_TWO_GROUPS_EXPECTED_ERROR = -13;
+	public static final int IF_BOOLEAN_EXPECTED_ERROR = -14;
+	public static final int CALL_TOO_FEW_ELEMENTS_ERROR = -15;
+	public static final int CALL_STRING_EXPECTED_ERROR = -16;
+	public static final int SOURCE_TOO_FEW_ELEMENTS_ERROR = -17;
+	public static final int SOURCE_STRING_EXPECTED_ERROR = -18;
+	public static final int SOURCE_EXECUTION_ERROR = -19;
+	public static final int STATIC_EXECUTION_ERROR = -20;
+	public static final int EXEC_EXECUTION_ERROR = -21;
+	public static final int CALL_EXECUTION_ERROR = -22;
+	public static final int REPEAT_EXECUTION_ERROR = -23;
+	public static final int IF_EXECUTION_ERROR = -24;
+	public static final int USER_GROUP_EXECUTION_ERROR = -25;
+	
 	// The stack
 	private Stack<Token> stack;
 	
@@ -95,7 +123,7 @@ public class Interpretor {
 							if (showError) {
 								System.err.println("Error: Keyword \"" + name + "\" excpects a string as second stack value!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -4;
+							return DEF_STRING_EXPECTED_ERROR;
 						}
 
 						// Check the name
@@ -117,7 +145,7 @@ public class Interpretor {
 								System.err.println("Error: Keyword \"" + name + "\": the chosen name \"" + stringName
 									+ "\" is not compatible with the keyword format!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -5;
+							return DEF_WRONG_KEYWORD_FORMAT_ERROR;
 						} else {
 
 							// Add the group to the environment with the correct group name
@@ -129,7 +157,7 @@ public class Interpretor {
 								
 								int returnCode = execute_from_env(stack, env, finalName, groupName, (TKeyword) t);
 								if (returnCode != 0) {
-									return returnCode;
+									return STATIC_EXECUTION_ERROR;
 								}
 								
 							}
@@ -141,7 +169,7 @@ public class Interpretor {
 						if (showError) {
 							System.err.println("Error: Keywork \"def\": the stack contains less than two elements!\n" + callStack.getFullStack(name, originSource, originLine));
 						}
-						return -3;
+						return DEF_TOO_FEW_ELEMENTS_ERROR;
 					}
 
 				}
@@ -159,7 +187,7 @@ public class Interpretor {
 							if (showError) {
 								System.err.println("Error: Keyword \"exec\" excpect an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -8;
+							return EXEC_GROUP_EXPECTED_ERROR;
 
 						}
 
@@ -169,14 +197,14 @@ public class Interpretor {
 
 						// Check for an error
 						if (exitCode != 0) {
-							return exitCode;
+							return EXEC_EXECUTION_ERROR;
 						}
 
 					} catch (EmptyStackException e) {
 						if (showError) {
 							System.err.println("Error: Keyword \"exec\": the stack contains less than one element!\n" + callStack.getFullStack(name, originSource, originLine));
 						}
-						return -7;
+						return EXEC_TOO_FEW_ELEMENTS_ERROR;
 					}
 
 				}
@@ -195,7 +223,7 @@ public class Interpretor {
 							if (showError) {
 								System.err.println("Error: Keyword \"call\" excpect a string!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -15;
+							return CALL_STRING_EXPECTED_ERROR;
 
 						}
 
@@ -208,14 +236,14 @@ public class Interpretor {
 
 						// Check for an error
 						if (exitCode != 0) {
-							return exitCode;
+							return CALL_EXECUTION_ERROR;
 						}
 
 					} catch (EmptyStackException e) {
 						if (showError) {
 							System.err.println("Error: Keyword \"call\": the stack contains less than one element!\n" + callStack.getFullStack(name, originSource, originLine));
 						}
-						return -14;
+						return CALL_TOO_FEW_ELEMENTS_ERROR;
 					}
 					
 				}
@@ -233,7 +261,7 @@ public class Interpretor {
 							if (showError) {
 								System.err.println("Error: Keyword \"repeat\" excpect a number and an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -10;
+							return REPEAT_STRING_AND_GROUP_EXPECTED_ERROR;
 
 						}
 
@@ -249,14 +277,14 @@ public class Interpretor {
 
 						// Check for an error
 						if (exitCode != 0) {
-							return exitCode;
+							return REPEAT_EXECUTION_ERROR;
 						}
 
 					} catch (EmptyStackException e) {
 						if (showError) {
 							System.err.println("Error: Keyword \"repeat\": the stack contains less than two elements!\n" + callStack.getFullStack(name, originSource, originLine));
 						}
-						return -9;
+						return REPEAT_TOO_FEW_ELEMENTS_ERROR;
 					}
 					
 				}
@@ -274,7 +302,7 @@ public class Interpretor {
 							if (showError) {
 								System.err.println("Error: Keyword \"if\" excpect a number and two instruction groups!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -12;
+							return IF_NUMBER_AND_TWO_GROUPS_EXPECTED_ERROR;
 
 						}
 						
@@ -284,7 +312,7 @@ public class Interpretor {
 							if (showError) {
 								System.err.println("Error: Keyword \"if\" excpect 0 or 1 as condition argument!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -13;
+							return IF_BOOLEAN_EXPECTED_ERROR;
 						}
 
 						// Execute...
@@ -296,14 +324,14 @@ public class Interpretor {
 
 						// Check for an error
 						if (exitCode != 0) {
-							return exitCode;
+							return IF_EXECUTION_ERROR;
 						}
 
 					} catch (EmptyStackException e) {
 						if (showError) {
 							System.err.println("Error: Keyword \"if\": the stack contains less than three elements!\n" + callStack.getFullStack(name, originSource, originLine));
 						}
-						return -11;
+						return IF_TOO_FEW_ELEMENTS_ERROR;
 					}
 					
 				}
@@ -325,36 +353,44 @@ public class Interpretor {
 				// Including a file
 				else if ("source".equals(name)) {
 					
-					Token str = stack.pop();
-					
-					if (!(str instanceof TString)) {
-						if (showError) {
-							System.err.println("Error: Keyword \"source\" excpect a string!\n" + callStack.getFullStack(name, originSource, originLine));
+					try {
+						
+						Token str = stack.pop();
+						
+						if (!(str instanceof TString)) {
+							if (showError) {
+								System.err.println("Error: Keyword \"source\" excpect a string!\n" + callStack.getFullStack(name, originSource, originLine));
+							}
+							return SOURCE_STRING_EXPECTED_ERROR;
 						}
-						return -16;
-					}
-					
-					// Get the string
-					String filePath = ((TString)str).getValue();
-					
-					// Prepare the path
-					filePath = filePath.replace("@lib", "libs"); // TODO
-					File file = new File(filePath);
-					String absolutePath = file.getAbsolutePath();
-					
-					// Execute it in a new WSL object with the same interpretor but new tokenizer
-					WSL wsl = new WSL(this, showError);
-					int returnCode = wsl.executeFile(absolutePath);
-					
-					// Search for an error
-					if (returnCode != 0) {
-						// Only print the error stack, the message is printed during the tokenization, interpretation
-						if (showError) {
-							System.err.println(callStack.getFullStack(name, originSource, originLine));
+						
+						// Get the string
+						String filePath = ((TString)str).getValue();
+						
+						// Prepare the path
+						filePath = filePath.replace("@lib", "libs"); // TODO
+						File file = new File(filePath);
+						String absolutePath = file.getAbsolutePath();
+						
+						// Execute it in a new WSL object with the same interpretor but new tokenizer
+						WSL wsl = new WSL(this, showError);
+						int returnCode = wsl.executeFile(absolutePath);
+						
+						// Search for an error
+						if (returnCode != 0) {
+							// Only print the error stack, the message is printed during the tokenization, interpretation
+							if (showError) {
+								System.err.println(callStack.getFullStack(name, originSource, originLine));
+							}
+							return SOURCE_EXECUTION_ERROR;
 						}
-						return -17;
-					}
 					
+					} catch (EmptyStackException e) {
+						if (showError) {
+							System.err.println("Error: Keyword \"source\": the stack contains less than one element!\n" + callStack.getFullStack(name, originSource, originLine));
+						}
+						return SOURCE_TOO_FEW_ELEMENTS_ERROR;
+					}
 					
 				}
 
@@ -369,7 +405,7 @@ public class Interpretor {
 
 						// Execute the function on the current stack
 						if (!function.execute(stack, callStack.add(name, originSource, originLine))) {
-							return -2;
+							return FUNCTION_EXECUTION_ERROR;
 						}
 
 					}
@@ -382,7 +418,7 @@ public class Interpretor {
 
 							int code = execute_from_env(stack, env, name, groupName, (TKeyword) t);
 							if (code != 0) {
-								return code;
+								return code; // Return an interpretor error code
 							}
 
 						}
@@ -392,7 +428,7 @@ public class Interpretor {
 							if (showError) {
 								System.err.println("Error: Undefined function name \"" + name + "\"!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return -1;
+							return UNDEFINED_FUNCTION_ERROR;
 						}
 
 					}
@@ -407,13 +443,13 @@ public class Interpretor {
 				if (showError) {
 					System.err.println("Error: Unexpected object in call stack!");
 				}
-				return -3;
+				return UNEXPECTED_OBJECT_ERROR;
 
 			}
 
 		}
 
-		return 0;
+		return NO_ERROR;
 	}
 	
 	// Execute a user defined group
@@ -441,7 +477,7 @@ public class Interpretor {
 				exitCode = newIt.execute(l2);
 			}
 			if (exitCode != 0) {
-				return exitCode;
+				return USER_GROUP_EXECUTION_ERROR;
 			}
 
 			// Prevent stack overflow
@@ -449,10 +485,10 @@ public class Interpretor {
 			if (showError) {
 				System.err.println("Error: Stack overflow while calling \"" + name + "\"!\n" + callStack.getFullStack(tName, tSource, tLine));
 			}
-			return -6;
+			return STACK_OVERFLOW_ERROR;
 		}
 		
-		return 0;
+		return NO_ERROR;
 		
 	}
 

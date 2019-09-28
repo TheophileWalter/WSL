@@ -7,13 +7,13 @@ import tw.walter.stack.CallStack;
 import tw.walter.stack.tokens.*;
 
 /*
- * Walter Stack Language - Source code of "div" function
- * Divide two numbers
- * Example: "a b div" will perform "a/b"
+ * Walter Stack Language - Source code of "mod" function
+ * Compute the rest of the division of two numbers
+ * Example: "10 3 mod" will put 1 in the stack
  */
-public class FDiv implements WFunction {
+public class FMod implements WFunction {
     
-    public static final String name = "div";
+    public static final String name = "mod";
 
     @Override
     public boolean execute(Stack<Token> s, CallStack callStack) {
@@ -23,14 +23,13 @@ public class FDiv implements WFunction {
 				System.err.println("Error: Function \"" + name + "\" excpect two numbers!\n" + callStack.toString());
                 return false;
             }
-            double ac = ((TNumber)a).getValue(), bc = ((TNumber)b).getValue();
-            if (bc == 0) {
-            	System.err.println("Error: Function \"" + name + "\": cannot divide by zero!\n" + callStack.toString());
-                return false;
-            }
-            s.push(new TNumber(ac / bc));
+            int ac = (int)((TNumber)a).getValue(), bc = (int)((TNumber)b).getValue();
+            s.push(new TNumber((double)(ac % bc)));
         } catch (EmptyStackException e) {
             System.err.println("Error: Function \"" + name + "\": the stack contains less than two elements!\n" + callStack.toString());
+            return false;
+        } catch (ArithmeticException e) {
+        	System.err.println("Error: Function \"" + name + "\": cannot divide by zero!\n" + callStack.toString());
             return false;
         }
         return true;

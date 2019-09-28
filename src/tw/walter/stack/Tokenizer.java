@@ -13,6 +13,7 @@ public class Tokenizer implements StringConsumerListener {
 	public static final int END_OF_STREAM_IN_STRING_ERROR = 3;
 	public static final int END_OF_STREAM_IN_GROUP_ERROR = 4;
 	public static final int UNEXPECTED_CHARACTER_IN_COMMENT_ERROR = 5;
+	public static final int NEGATIVE_NUMBER_ERROR = 6;
 
 	// Private attributes
 	private StringConsumer sc;
@@ -172,6 +173,14 @@ public class Tokenizer implements StringConsumerListener {
 		}
 		// Reverse last char (to be able to get it out of this function)
 		sc.reverse();
+		// Check if the number is only "-"
+		if ("-".equals(number) || "-.".equals(number)) {
+			if (this.showError) {
+				System.err.println("Error: A number is expected after \"-\"!\nSource \"" + source + "\" line " + currentLine);
+			}
+			this.lastError = NEGATIVE_NUMBER_ERROR;
+			return false;
+		}
 		// Add the keyword to the result
 		TNumber n = new TNumber(Double.parseDouble(number));
 		n.setOrigin(source, lineAtStart);

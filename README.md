@@ -183,6 +183,12 @@ There is five data type in WSL
     <u>Example</u>: <code>5 42 min ** Will put 5 in the stack</code><br />
   </li><br />
   <li>
+    <b>mod</b><br />
+    <code>^Number -> ^Number -> mod -> ^Number</code><br />
+    Compute the modulo of two numbers<br />
+    <u>Example</u>: <code>10 3 mod ** Will put 1 in the stack</code><br />
+  </li><br />
+  <li>
     <b>mul</b><br />
     <code>^Number -> ^Number -> mul -> ^Number</code><br />
     Multiply two numbers and put the result in the stack<br />

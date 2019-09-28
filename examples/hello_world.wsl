@@ -1,0 +1,5 @@
+** Put the string "Hello world!" in the stack
+"Hello world!"
+
+** Print the value in the stack
+print

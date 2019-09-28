@@ -51,6 +51,11 @@ math.pi math.deg 180 "\"test_lib.wsl\" error: math.rad" test.assert_equal
 2 0 math.pow 1 "\"test_lib.wsl\" error: math.pow" test.assert_equal
 2 1 math.pow 2 "\"test_lib.wsl\" error: math.pow" test.assert_equal
 2 8 math.pow 256 "\"test_lib.wsl\" error: math.pow" test.assert_equal
+0 math.fact 1 "\"test_lib.wsl\" error: math.fact" test.assert_equal
+1 math.fact 1 "\"test_lib.wsl\" error: math.fact" test.assert_equal
+2 math.fact 2 "\"test_lib.wsl\" error: math.fact" test.assert_equal
+3 math.fact 6 "\"test_lib.wsl\" error: math.fact" test.assert_equal
+10 math.fact 3628800 "\"test_lib.wsl\" error: math.fact" test.assert_equal
 
 ** Stack
 stack.empty size 0 "\"test_lib.wsl\" error: stack.empty" test.assert_equal

@@ -92,6 +92,19 @@
         1 iflt
     ) def
 
+    ** Compute the factorial of a number
+    "fact" (
+        1 exch ** The result
+        1 exch ** The counter that will be incremented
+        (
+            copy ** Copy the counter
+            1 add 2 mb ** Increment it and move it back
+            mul ** Multiply the result and the counter
+            exch ** Move the result back
+        ) exch repeat ** Repeat the number of time given in the stack
+        pop ** Remove the counter
+    ) def
+
 ) static
 
 ** Operations on the stack

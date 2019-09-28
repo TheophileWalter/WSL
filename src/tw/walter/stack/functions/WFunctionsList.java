@@ -32,6 +32,7 @@ public class WFunctionsList {
 		add("number", new FNumber() );
 		add("exit",   new FExit()   );
 		add("random", new FRandom() );
+		add("mod",    new FMod()    );
 
 	}
 

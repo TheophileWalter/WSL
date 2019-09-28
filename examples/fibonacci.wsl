@@ -1,0 +1,26 @@
+** Include the default library
+"@lib/lib.wsl" source
+
+** Define a group called "fibonacci"
+"fibonacci" (
+	** Create a code that will be executed the required number of times
+	(
+		** Copy the two previous values
+		2 dup
+		** Sum them
+		sum
+	)
+	** Invert the code group and the repetition times to be able
+	** to call "repeat" with parameters in the correct order
+	exch
+	** Now the stack contains a group and a number,
+	** so we can call "repeat" to execute the code
+	** the desired number of time
+	repeat
+) def
+
+** Compute the 7 values of Fibonacci sequence after 0 and 1
+0 1 7 fibonacci
+
+** Print the stack
+stack.pretty_print

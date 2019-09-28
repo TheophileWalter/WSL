@@ -46,6 +46,14 @@ There is five data type in WSL
     <u>Example</u>: <code>"Hello" "print" call ** Will print "Hello"</code><br />
   </li><br />
   <li>
+    <b>current</b><br />
+    <code>current -> ^String</code><br />
+    Put the prefix of the current group in the stack<br />
+    The prefix is the name of the currently executed group without final dot<br />
+    If this keyword is called outside a group, it will return an empty string<br />
+    <u>Example</u>: <code>"g1" ("g2" (current print) def) static g1.g2 ** Will print "g1.g2"</code><br />
+  </li><br />
+  <li>
     <b>def</b><br />
     <code>^String -> ^a' -> def</code><br />
     Define a value to be called later<br />
@@ -69,14 +77,6 @@ There is five data type in WSL
     Same as <code>def</code> but if the definition is in a group, the name will not be prefixed<br />
   </li><br />
   <li>
-    <b>group_prefix</b><br />
-    <code>group_prefix -> ^String</code><br />
-    Put the prefix of the current group in the stack<br />
-    The prefix is the name of the currently executed group with a final dot<br />
-    If this keyword is called outside a group, it will return an empty string<br />
-    <u>Example</u>: <code>"g1" ("g2" (group_prefix print) def) static g1.g2 ** Will print "g1.g2."</code><br />
-  </li><br />
-  <li>
     <b>if</b><br />
     <code>^Group -> ^Group -> ^Boolean -> if</code><br />
     Execute one of the two groups based on the boolean value<br />
@@ -87,12 +87,12 @@ There is five data type in WSL
     </div>
   </li><br />
   <li>
-    <b>parent_prefix</b><br />
-    <code>parent_prefix -> ^String</code><br />
+    <b>parent</b><br />
+    <code>parent -> ^String</code><br />
     Put the prefix of the parent group in the stack<br />
-    The prefix is the name of the group that called the currently executed group with a final dot<br />
+    The prefix is the name of the group that called the currently executed group without final dot<br />
     If this keyword is called outside a group, or if the parent is not a group, it will return an empty string<br />
-    <u>Example</u>: <code>"a" (parent_prefix print) def "foo" ("bar" (a) def) static foo.bar ** Will print "foo.bar."</code><br />
+    <u>Example</u>: <code>"a" (parent print) def "foo" ("bar" (a) def) static foo.bar ** Will print "foo.bar"</code><br />
   </li><br />
   <li>
     <b>repeat</b><br />
@@ -311,7 +311,7 @@ And here is the equivalent code in WSL with <code>this</code><br />
 	** Else group
 	()
 	** Condition on arguments
-	"n" this "max" this lf if
+	"n" this "max" this lt if
   
 ) def
 

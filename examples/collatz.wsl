@@ -1,0 +1,38 @@
+"@lib/lib.wsl" source
+
+** Create a group
+"collatz" (
+    ** Copy the value (for the condition)
+    copy
+    ** Group to compute the values
+    (
+        ** Copy the value two times
+        ** (for the condition and the computing)
+        copy copy
+        ** Group if value is odd (n%2 == 1)
+        (
+            3 mul 1 add
+        ) exch
+        ** Group if value is even
+        (
+            2 div
+        ) exch
+        ** The condition
+        2 mod if
+        ** Call itself reccursivly
+        collatz
+    ) exch
+    ** Group if the current value is <= 1
+    () exch
+    ** The condition
+    1 ifgt
+) def
+
+** The uncommented version is not that big
+** "collatz" ( copy ( copy copy ( 3 mul 1 add ) exch ( 2 div ) exch 2 mod if collatz ) exch () exch 1 ifgt ) def
+
+** Call the function
+42 collatz
+
+** Print the result
+stack.pretty_print

@@ -7,13 +7,13 @@
 **
 
 ** Commons
-"println"  ("\n" concat print)              def ** Print a string with a new line
-"uprint"   (string print)                   def ** Print any type
-"uprintln" (string println)                 def ** Print any type with a new line
-"uconcat"  (string exch string exch concat) def ** Concatenate any type as a string
-"exch"     (1 mb)                           def ** Exchange the two first values on the stack
-"copy"     (1 dup)                          def ** Copy the value on top of the stack
-"this"     (parent_prefix exch concat call) def ** Call the group defined in the current group from a string name
+"println"  ("\n" concat print)                  def ** Print a string with a new line
+"uprint"   (string print)                       def ** Print any type
+"uprintln" (string println)                     def ** Print any type with a new line
+"uconcat"  (string exch string exch concat)     def ** Concatenate any type as a string
+"exch"     (1 mb)                               def ** Exchange the two first values on the stack
+"copy"     (1 dup)                              def ** Copy the value on top of the stack
+"this"     (parent "." concat exch concat call) def ** Call the group defined in the current group from a string name
 
 ** Alias
 "sum"         (add)    def

@@ -1,0 +1,12 @@
+/* Visualize WSL grammar at https://www.bottlecaps.de/rr/ui */
+
+Script ::= (Token | Blank | Comment)*
+Token ::= TKeyword | TString | TNumber | TGroup
+TKeyword ::= [_a-zA-Z][_.a-zA-Z0-9]*
+TString ::= '"'('\"'|[^"])*'"'
+TNumber ::= ('-' (([0-9]+ '.' [0-9]*) | [0-9]+)) | ([0-9]+ '.'? [0-9]*)
+TGroup ::= '('Script')'
+Blank ::= Space | LineBreak
+Space ::= [#x9#x20] /* TAB | SPACE */
+LineBreak ::= [#xA#xD] /* LF | CR */
+Comment ::= '**' [^#xA#xD]* /* Comment end with a line break */

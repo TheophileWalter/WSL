@@ -337,15 +337,15 @@ public class Interpretor {
 				}
 				
 				// If it's a prefix getter
-				else if ("group_prefix".equals(name)) {
+				else if ("current".equals(name)) {
 					
-					String prefix = groupName == null ? "" : groupName + ".";
+					String prefix = groupName == null ? "" : groupName;
 					stack.push(new TString(prefix));
 					
 				// Parent prefix getter
-				} else if ("parent_prefix".equals(name)) {
+				} else if ("parent".equals(name)) {
 					
-					String prefix = parentName == null ? "" : parentName + ".";
+					String prefix = parentName == null ? "" : parentName;
 					stack.push(new TString(prefix));
 
 				}

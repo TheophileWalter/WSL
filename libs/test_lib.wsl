@@ -45,6 +45,18 @@ true true xor "\"test_lib.wsl\" error: xor" test.assert_false
 5 5 gt "\"test_lib.wsl\" error: gt" test.assert_false
 9 5 gt "\"test_lib.wsl\" error: gt" test.assert_true
 
+** Misc
+
+** mmb #1
+0 0 0 0 8 9 2 3 mmb
+6 pack string (0 8 9 0 0 0) string "\"test_lib.wsl\" error: mmb" test.assert_equal
+size 0 "\"test_lib.wsl\" error: mmb" test.assert_equal
+
+** mmb #2
+0 0 0 0 0 0 0 0 1 2 3 3 5 mmb
+11 pack string (0 0 0 1 2 3 0 0 0 0 0) string "\"test_lib.wsl\" error: mmb" test.assert_equal
+size 0 "\"test_lib.wsl\" error: mmb" test.assert_equal
+
 ** Math
 math.pi math.deg 180 "\"test_lib.wsl\" error: math.rad" test.assert_equal
 180 math.rad math.pi "\"test_lib.wsl\" error: math.rad" test.assert_equal

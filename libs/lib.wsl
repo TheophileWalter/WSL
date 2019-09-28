@@ -60,6 +60,20 @@
 "iflt" (lt if) def ** If lower than, example: "(1) (2) 0 5 iflt" will put 1 in the stack
 "ifgt" (gt if) def ** If greater than, example: "(1) (2) 0 5 ifgt" will put 2 in the stack
 
+** Misc functions
+
+** Move a geven number of elements back in the stack
+** Examples: "0 0 0 0 8 9 2 3 mmb" will give "0 8 9 0 0 0"
+**           "0 0 0 0 0 0 0 0 1 2 3 3 5 mmb" give "0 0 0 1 2 3 0 0 0 0 0"
+"mmb" (
+	** The number of value to go back
+	2 dup add 2 mb pop
+	** The group that will move elements back
+	(copy 2 mb mb) exch
+	** Repeat it
+	repeat pop
+) def
+
 ** Mathematics group
 "math" (
     
@@ -287,5 +301,5 @@
     "is_beta"           true                               def
     "lib_version"      "1.0"                               def
     "lib_version_code"  10                                 def
-    "copyright"        "Copyright 2018 - Théophile Walter" def
+    "copyright"        "Copyright 2019 - Théophile Walter" def
 ) static

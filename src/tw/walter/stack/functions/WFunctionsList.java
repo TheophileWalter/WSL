@@ -33,6 +33,7 @@ public class WFunctionsList {
 		add("exit",   new FExit()   );
 		add("random", new FRandom() );
 		add("mod",    new FMod()    );
+		add("pack",   new FPack()   );
 
 	}
 

@@ -1,5 +1,4 @@
 prompt: User input from stdin
 Group "string"
 ... one group per data type kois
-mmb function (to move back multiple values, ex: "0 0 0 0 8 9 2 3 mmb" -> "0 8 9 0 0 0")
 Ajouter un mode pour générer un code texte à partir d'une liste de tokens (mode compact ou indenté)

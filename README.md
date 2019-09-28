@@ -47,11 +47,15 @@ There is five data type in WSL
   </li><br />
   <li>
     <b>def</b><br />
-    <code>^String -> ^Group -> def</code><br />
-    Define a group to be called later<br />
+    <code>^String -> ^a' -> def</code><br />
+    Define a value to be called later<br />
+    <u>Example</u>: <code>"pi" 3.1415926535 def ** When you'll call the keyword "pi", 3.1415926535 will be put in the stack</code></br />
+    If the value to define is a group, then when you'll call it, the code inside the group will be called<br />
     <u>Example</u>: <code>"group" ("Hello" print) def ** You can now call the code with the keyword "group"</code><br />
     If the definition is in a group, the name will be prefixed with the parent group name<br />
     <u>Example</u>: <code>"g1" ("g2" ("Hello" print) def) def ** You must call g2 with the name g1.g2</code><br />
+    <i>Note</i>: To save a group, put it in a group<br />
+    <u>Example</u>: <code>"g" ((123 456)) def</code><br />
   </li><br />
   <li>
     <b>exec</b><br />
@@ -61,7 +65,7 @@ There is five data type in WSL
   </li><br />
   <li>
     <b>global</b><br />
-    <code>^String -> ^Group -> def</code><br />
+    <code>^String -> ^a' -> def</code><br />
     Same as <code>def</code> but if the definition is in a group, the name will not be prefixed<br />
   </li><br />
   <li>
@@ -97,12 +101,23 @@ There is five data type in WSL
     <u>Example</u>: <code>("Hello" print) 5 repeat ** Will print "Hello" five times</code><br />
   </li><br />
   <li>
+    <b>source</b><br />
+    <code>^String -> source</code><br />
+    Execute a wsl script<br />
+    The stack and the defined values will be shared between the two scripts<br />
+    If the syntax checking or execution fails, the process will stop<br />
+    <u>Example</u>: <code>"file.wsl" source ** Will execute the file "file.wsl"</code><br />
+    The directory containing the default WSL libraries can is defined as <code>@lib</code><br />
+    <u>Example</u>: <code>"@lib/lib.wsl" source ** Will execute the default WSL library</code><br />
+  </li><br />
+  <li>
     <b>static</b><br />
-    <code>^String -> ^Group -> static</code><br />
+    <code>^String -> ^a' -> static</code><br />
     Define a static group to be called later<br />
-    A static group is a group that contains only sub-groups declarations, it will be executed one time right after the declaration to evaluate the sub-groups<br />
+    A static value is a group that contains only sub-groups declarations, it will be executed one time right after the declaration to evaluate the sub-groups<br />
     <u>Example</u>: <code>"group" ("sub1" ("hello") def "sub2" ("world") def) static ** You can now call the codes with the keywords "group.sub1" and "group.sub2"</code><br />
     If the definition is in a group, the name will be prefixed with the parent group name (as for <code>def</code>)<br />
+    <i>Note</i>: If you use it with a value instead of a group, the value will be put in the stack<br />
   </li><br />
 </ul>
 <h3>Built-in functions</h3>

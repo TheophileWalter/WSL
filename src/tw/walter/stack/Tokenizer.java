@@ -23,9 +23,11 @@ public class Tokenizer implements StringConsumerListener {
 	private boolean isTopLevel;
 	private int lastError;
 
+	public Tokenizer() {
+		this.showError = true;
+	}
 	public Tokenizer(boolean showError) {
 		this.showError = showError;
-		this.isTopLevel = isTopLevel;
 	}
 
 	/*

@@ -19,9 +19,17 @@ public class WSL {
 	/*
 	 * Constructor, instantiate the class
 	 */
+	public WSL() {
+		this.tk = new Tokenizer(true);
+		this.it = new Interpretor(true);
+	}
 	public WSL(boolean showError) {
 		this.tk = new Tokenizer(showError);
-		this.it = new Interpretor();
+		this.it = new Interpretor(showError);
+	}
+	public WSL(Interpretor it, boolean showError) {
+		this.tk = new Tokenizer(showError);
+		this.it = it;
 	}
 
 	/*
@@ -34,6 +42,11 @@ public class WSL {
 		return execute(code, source, false);
 	}
 	public int execute(String code, String source, boolean isTopLevel) {
+		
+		// Code may be null if the file to read don't exists
+		if (code == null) {
+			return -1;
+		}
 
 		// Get the token list
 		ArrayList<Token> tokens = this.tk.getTokens(code, source, isTopLevel);
@@ -44,7 +57,11 @@ public class WSL {
 		}
 
 		// Execute the instructions
-		it.execute(tokens);
+		int resultCode = it.execute(tokens);
+		
+		if (resultCode != 0) {
+			return -1;
+		}
 
 		return 0;
 	}
@@ -65,10 +82,10 @@ public class WSL {
 			fis.read(data);
 			fis.close();
 
-			return new String(data, "UTF-8");
+			return new String(data, "UTF-8").replaceAll("\\r\\n", "\n").replaceAll("\\r", "\n");
 		} catch (Exception e) {
 			System.err.println("Error: Unable to read file \"" + path + "\"");
-			return "";
+			return null;
 		}
 	}
 	
@@ -92,7 +109,7 @@ public class WSL {
 		    	System.out.print("\nwsl> ");
 		    }
 		    String inputString = scanner.nextLine();
-		    int returnCode = this.execute(lastInput + "\n" + inputString, "<stdin>", true);
+		    int returnCode = this.execute(lastInput + inputString, "<stdin>", true);
 		    
 		    // If the error is a end of stream error, we let the user print a new line
 		    if (returnCode == -1 &&

@@ -12,7 +12,17 @@ import tw.walter.stack.tokens.*;
  * Execute a given code from a string
  */
 public class WSL {
-
+	
+	// Public informations about WSL
+	public static final String  WSL_VERSION          = "1.0 beta";
+	public static final int     WSL_VERSION_CODE     = 10;
+	public static final boolean WSL_IS_ALPHA         = false;
+	public static final boolean WSL_IS_BETA          = true;
+    public static final String  WSL_LIB_VERSION      = "1.0";
+    public static final int     WSL_LIB_VERSION_CODE = 10;
+    public static final String  WSL_COPYRIGHT        = "Copyright 2021 - Théophile Walter";
+	
+	// Private attributes
 	private Tokenizer tk;
 	private Interpretor it;
 
@@ -100,6 +110,8 @@ public class WSL {
 		
 		// A string to save lave input in case of multiple line input
 		String lastInput = "";
+		
+		System.out.println("WSL version " + WSL_VERSION + "\n" + WSL_COPYRIGHT);
 		
 		// Loop to execute every given lines
 		while (true) {

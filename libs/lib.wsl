@@ -6,6 +6,9 @@
 ** Author Théophile Walter
 **
 
+** Check lib version
+() ("Error: WSL and library version do not match!\n" print 1 exit) "lib_version_code" var 10 equal if
+
 ** Commons
 "println"  ("\n" concat print)                  def ** Print a string with a new line
 "uprint"   (string print)                       def ** Print any type
@@ -17,7 +20,7 @@
 
 ** Alias
 "sum"         (add)    def
-"substract"   (sub)    def
+"subtract"    (sub)    def
 "multiply"    (mul)    def
 "divide"      (div)    def
 "concatenate" (concat) def
@@ -34,7 +37,7 @@
 "and" (add 2 equal) def
 "or" (sum 0 gt) def
 "xor" (sum 1 equal) def
-"nif" (not if) def ** Inversed if
+"nif" (not if) def ** Inverse if
 ** Is a number is lower than another
 "lt" (
     ** False if the two numbers are equals
@@ -62,7 +65,7 @@
 
 ** Misc functions
 
-** Move a geven number of elements back in the stack
+** Move a given number of elements back in the stack
 ** Examples: "0 0 0 0 8 9 2 3 mmb" will give "0 8 9 0 0 0"
 **           "0 0 0 0 0 0 0 0 1 2 3 3 5 mmb" give "0 0 0 1 2 3 0 0 0 0 0"
 "mmb" (
@@ -129,7 +132,7 @@
     ** Get the stack size before adding the (pop) group
     "empty" (size (pop) exch repeat) def
 
-    ** Fill the stact with given element
+    ** Fill the stack with given element
     ** Example: "0 10 stack.fill" will put 10 times the number 0 in the stack
     "fill" (
         ** If the parameter is 0, we pop the value to fill
@@ -294,13 +297,13 @@
 
 ) static
 
-** Informations
+** Information
 "wsl" (
-    "version"          "1.0 beta"                          def
-    "version_code"      10                                 def
-    "is_alpha"          false                              def
-    "is_beta"           true                               def
-    "lib_version"      "1.0"                               def
-    "lib_version_code"  10                                 def
-    "copyright"        "Copyright 2019 - Théophile Walter" def
+    "version"          copy var def
+    "version_code"     copy var def
+    "is_alpha"         copy var def
+    "is_beta"          copy var def
+    "lib_version"      copy var def
+    "lib_version_code" copy var def
+    "copyright"        copy var def
 ) static

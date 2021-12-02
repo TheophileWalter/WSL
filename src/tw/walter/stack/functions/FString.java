@@ -30,10 +30,10 @@ public class FString implements WFunction {
 				}
 
 			} else if (a instanceof TKeyword) {
-				String n = ((TKeyword) a).toString();
+				String n = a.toString();
 				s.push(new TString(n));
 			} else if (a instanceof TGroup) {
-				String n = ((TGroup) a).toString();
+				String n = a.toString();
 				s.push(new TString(n));
 			} else if (a instanceof TString) {
 				s.push(a);

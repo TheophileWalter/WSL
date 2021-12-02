@@ -16,7 +16,7 @@ public class FSize implements WFunction {
 
 	@Override
 	public boolean execute(Stack<Token> s, CallStack callStack) {
-		s.add(new TNumber((double) s.size()));
+		s.add(new TNumber(s.size()));
 		return true;
 	}
 

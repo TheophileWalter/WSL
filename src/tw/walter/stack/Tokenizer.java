@@ -20,13 +20,10 @@ public class Tokenizer implements StringConsumerListener {
 	private ArrayList<Token> tokens;
 	private String source;
 	private int currentLine;
-	private boolean showError;
+	private final boolean showError;
 	private boolean isTopLevel;
 	private int lastError;
 
-	public Tokenizer() {
-		this.showError = true;
-	}
 	public Tokenizer(boolean showError) {
 		this.showError = showError;
 	}
@@ -43,7 +40,7 @@ public class Tokenizer implements StringConsumerListener {
 		this.lastError = NO_ERROR;
 		this.isTopLevel = isTopLevel;
 		
-		// Set up the source informations
+		// Set up the source information
 		this.source = source;
 		this.currentLine = currentLine;
 
@@ -96,7 +93,7 @@ public class Tokenizer implements StringConsumerListener {
 
 			// A string starting character
 			else if (isStringDelimiter(c)) {
-				if (!stringLoop(c)) {
+				if (!stringLoop()) {
 					tokens = null;
 					return;
 				}
@@ -104,7 +101,7 @@ public class Tokenizer implements StringConsumerListener {
 
 			// A group starting character
 			else if (isGroupStart(c)) {
-				if (!groupLoop(c)) {
+				if (!groupLoop()) {
 					tokens = null;
 					return;
 				}
@@ -112,7 +109,7 @@ public class Tokenizer implements StringConsumerListener {
 
 			// A comment
 			else if (isCommentStart(c)) {
-				if (!commentLoop(c)) {
+				if (!commentLoop()) {
 					tokens = null;
 					return;
 				}
@@ -136,24 +133,24 @@ public class Tokenizer implements StringConsumerListener {
 	 * Iterate to get an identifier
 	 */
 	private boolean keywordLoop(char firstChar) {
-		String keyword = Character.toString(firstChar);
+		StringBuilder keyword = new StringBuilder(Character.toString(firstChar));
 		int lineAtStart = currentLine; // Saves the line number of the start of the keyword
 		char c = sc.get();
 		while (isKeyword(c)) {
-			keyword += c;
+			keyword.append(c);
 			c = sc.get();
 		}
 		// Reverse last char (to be able to get it out of this function)
 		sc.reverse();
 		// Add the keyword to the result
-		TKeyword k = new TKeyword(keyword);
+		TKeyword k = new TKeyword(keyword.toString());
 		k.setOrigin(source, lineAtStart);
 		tokens.add(k);
 		return true;
 	}
 
 	private boolean numberLoop(char firstChar) {
-		String number = Character.toString(firstChar);
+		StringBuilder number = new StringBuilder(Character.toString(firstChar));
 		int lineAtStart = currentLine; // Saves the line number of the start of the number
 		boolean decimal = false;
 		char c = sc.get();
@@ -168,13 +165,13 @@ public class Tokenizer implements StringConsumerListener {
 			} else if (isDecimalSeparator(c)) {
 				decimal = true;
 			}
-			number += c;
+			number.append(c);
 			c = sc.get();
 		}
 		// Reverse last char (to be able to get it out of this function)
 		sc.reverse();
 		// Check if the number is only "-"
-		if ("-".equals(number) || "-.".equals(number)) {
+		if ("-".equals(number.toString()) || "-.".equals(number.toString())) {
 			if (this.showError) {
 				System.err.println("Error: A number is expected after \"-\"!\nSource \"" + source + "\" line " + currentLine);
 			}
@@ -182,14 +179,14 @@ public class Tokenizer implements StringConsumerListener {
 			return false;
 		}
 		// Add the keyword to the result
-		TNumber n = new TNumber(Double.parseDouble(number));
+		TNumber n = new TNumber(Double.parseDouble(number.toString()));
 		n.setOrigin(source, lineAtStart);
 		tokens.add(n);
 		return true;
 	}
 
-	private boolean stringLoop(char firstChar) {
-		String string = ""; // Skip the first char (because it's a \")
+	private boolean stringLoop() {
+		StringBuilder string = new StringBuilder(); // Skip the first char (because it's a \")
 		int lineAtStart = currentLine; // Saves the line number of the start of the string
 		char c = sc.get();
 		while (!isStringDelimiter(c)) {
@@ -197,7 +194,7 @@ public class Tokenizer implements StringConsumerListener {
 			// Check for end of code
 			if (c == '\0') {
 				if (this.showError && !this.isTopLevel) {
-					System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
+					System.err.println("Error: End of stream reached while scanning string!\nSource \"" + source + "\" line " + currentLine);
 				}
 				this.lastError = END_OF_STREAM_IN_STRING_ERROR;
 				return false;
@@ -211,7 +208,7 @@ public class Tokenizer implements StringConsumerListener {
 				switch (c) {
 				case '\0':
 					if (this.showError && !this.isTopLevel) {
-						System.err.println("Error: End of stream reached while scaning string!\nSource \"" + source + "\" line " + currentLine);
+						System.err.println("Error: End of stream reached while scanning string!\nSource \"" + source + "\" line " + currentLine);
 					}
 					this.lastError = END_OF_STREAM_IN_STRING_ERROR;
 					return false;
@@ -224,20 +221,20 @@ public class Tokenizer implements StringConsumerListener {
 				}
 			}
 
-			string += c;
+			string.append(c);
 			c = sc.get();
 		}
 		// No reverse needed because the last character is a \"
 		// Add the keyword to the result
-		TString s = new TString(string);
+		TString s = new TString(string.toString());
 		s.setOrigin(source, lineAtStart);
 		tokens.add(s);
 		return true;
 	}
 
-	public boolean groupLoop(char firstChar) {
+	public boolean groupLoop() {
 
-		String string = ""; // Skip the first char
+		StringBuilder string = new StringBuilder(); // Skip the first char
 		int lineAtStart = currentLine; // Saves the line number of the start of the group
 		// Reads the string in the group
 		char c = sc.get();
@@ -259,13 +256,13 @@ public class Tokenizer implements StringConsumerListener {
 			// Check for end of code
 			if (c == '\0') {
 				if (this.showError && !this.isTopLevel) {
-					System.err.println("Error: End of stream reached while scaning group!\nSource \"" + source + "\" line " + currentLine);
+					System.err.println("Error: End of stream reached while scanning group!\nSource \"" + source + "\" line " + currentLine);
 				}
 				this.lastError = END_OF_STREAM_IN_GROUP_ERROR;
 				return false;
 			}
 
-			string += c;
+			string.append(c);
 			c = sc.get();
 		}
 
@@ -273,7 +270,7 @@ public class Tokenizer implements StringConsumerListener {
 
 		// Analyze the tokens in the group
 		Tokenizer ntk = new Tokenizer(this.showError);
-		ArrayList<Token> groupList = ntk.getTokens(string, source, this.isTopLevel, lineAtStart);
+		ArrayList<Token> groupList = ntk.getTokens(string.toString(), source, this.isTopLevel, lineAtStart);
 
 		// Check for an error
 		if (groupList == null) {
@@ -288,7 +285,7 @@ public class Tokenizer implements StringConsumerListener {
 		return true;
 	}
 
-	public boolean commentLoop(char firstChar) {
+	public boolean commentLoop() {
 
 		char c = sc.get();
 

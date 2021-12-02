@@ -8,7 +8,7 @@ import tw.walter.stack.tokens.*;
 
 /*
  * Walter Stack Language - Source code of "sub" function
- * Substract two numbers
+ * Subtract two numbers
  * Example: "a b sub" will perform "a-b"
  */
 public class FSub implements WFunction {
@@ -20,7 +20,7 @@ public class FSub implements WFunction {
 		try {
 			Token b = s.pop(), a = s.pop();
 			if (!(a instanceof TNumber) || !(b instanceof TNumber)) {
-				System.err.println("Error: Function \"" + name + "\" excpect two numbers!");
+				System.err.println("Error: Function \"" + name + "\" expect two numbers!");
 				return false;
 			}
 			double ac = ((TNumber) a).getValue(), bc = ((TNumber) b).getValue();

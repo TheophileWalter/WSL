@@ -6,7 +6,7 @@ package tw.walter.stack.tokens;
  */
 public class TNumber implements Token {
 
-	private double value;
+	private final double value;
 	private String originSource;
 	private int originLine;
 

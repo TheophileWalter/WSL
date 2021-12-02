@@ -8,8 +8,8 @@ import tw.walter.stack.tokens.*;
 
 /*
  * Walter Stack Language - Source code of "pack" function
- * Put the n elements in the stack inside a group
- * Example: "1 2 3 4 5 2 pack" will put "4" and "5" in a group
+ * Put the n elements from the stack inside a group
+ * Example: "1 2 3 4 5 2 pack" will put 4 and 5 in a group
  *          The stack will be "1 2 3 (4 5)"
  */
 public class FPack implements WFunction {
@@ -23,7 +23,7 @@ public class FPack implements WFunction {
 			// Get the parameter
 			Token num = s.pop();
 			if (!(num instanceof TNumber)) {
-				System.err.println("Error: Function \"" + name + "\" excpect a number!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect a number!\n" + callStack.toString());
 				return false;
 			}
 			
@@ -44,7 +44,7 @@ public class FPack implements WFunction {
 			s.add(g);
 			
 		} catch (EmptyStackException e) {
-			System.err.println("Error: Function \"" + name + "\": the stack does not contains enought elements!\n" + callStack.toString());
+			System.err.println("Error: Function \"" + name + "\": the stack does not contains enough elements!\n" + callStack.toString());
 			return false;
 		}
 		return true;

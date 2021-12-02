@@ -19,7 +19,7 @@ public class FSqrt implements WFunction {
 		try {
 			Token a = s.pop();
 			if (!(a instanceof TNumber)) {
-				System.err.println("Error: Function \"" + name + "\" excpect a number!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect a number!\n" + callStack.toString());
 				return false;
 			}
 			double n = ((TNumber) a).getValue();

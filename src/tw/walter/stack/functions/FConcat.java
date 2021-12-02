@@ -20,7 +20,7 @@ public class FConcat implements WFunction {
 		try {
 			Token b = s.pop(), a = s.pop();
 			if (!(a instanceof TString) || !(b instanceof TString)) {
-				System.err.println("Error: Function \"" + name + "\" excpect two strings!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect two strings!\n" + callStack.toString());
 				return false;
 			}
 			String ac = ((TString) a).getValue(), bc = ((TString) b).getValue();

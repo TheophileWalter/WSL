@@ -11,10 +11,10 @@ import tw.walter.stack.functions.WFunction;
 import tw.walter.stack.tokens.*;
 
 /*
- * Walter Stack Language - Interpretor
+ * Walter Stack Language - Interpreter
  * Execute an array of tokens as a WSL code
  */
-public class Interpretor {
+public class Interpreter {
 	
 	// Error constants
 	public static final int NO_ERROR = 0;
@@ -45,25 +45,25 @@ public class Interpretor {
 	public static final int USER_GROUP_EXECUTION_ERROR = -25;
 	
 	// The stack
-	private Stack<Token> stack;
+	private final Stack<Token> stack;
 	
-	// List of bult-in functions
-	private WFunctionsList list;
+	// List of built-in functions
+	private final WFunctionsList list;
 	
 	// User defined-groups
-	private HashMap<String, Token> env;
+	private final HashMap<String, Token> env;
 	
 	// Names of current group and parent group
-	private String groupName;
-	private String parentName;
+	private final String groupName;
+	private final String parentName;
 	
 	// Call stack (for error printing)
-	private CallStack callStack;
+	private final CallStack callStack;
 	
 	// Do we need to show errors
-	private boolean showError;
+	private final boolean showError;
 
-	public Interpretor(boolean showError, Stack<Token> stack, HashMap<String, Token> env, CallStack callStack, String groupName, String parentName) {
+	public Interpreter(boolean showError, Stack<Token> stack, HashMap<String, Token> env, CallStack callStack, String groupName, String parentName) {
 		this.showError = showError;
 		this.stack = stack;
 		list = new WFunctionsList();
@@ -73,7 +73,7 @@ public class Interpretor {
 		this.callStack = callStack;
 	}
 
-	public Interpretor(boolean showError) {
+	public Interpreter(boolean showError) {
 		this.showError = showError;
 		stack = new Stack<>();
 		list = new WFunctionsList();
@@ -101,8 +101,8 @@ public class Interpretor {
 			else if (t instanceof TKeyword) {
 
 				String name = ((TKeyword) t).getName();
-				String originSource = ((TKeyword) t).getOriginSource();
-				int originLine = ((TKeyword) t).getOriginLine();
+				String originSource = t.getOriginSource();
+				int originLine = t.getOriginLine();
 
 				// First, check for the language keywords
 				if ("def".equals(name) || "global".equals(name) || "static".equals(name)) {
@@ -121,7 +121,7 @@ public class Interpretor {
 						// Check the type
 						if (!(newName instanceof TString)) {
 							if (showError) {
-								System.err.println("Error: Keyword \"" + name + "\" excpects a string as second stack value!\n" + callStack.getFullStack(name, originSource, originLine));
+								System.err.println("Error: Keyword \"" + name + "\" expects a string as second stack value!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
 							return DEF_STRING_EXPECTED_ERROR;
 						}
@@ -167,7 +167,7 @@ public class Interpretor {
 						// Catch the stack error
 					} catch (EmptyStackException e) {
 						if (showError) {
-							System.err.println("Error: Keywork \"def\": the stack contains less than two elements!\n" + callStack.getFullStack(name, originSource, originLine));
+							System.err.println("Error: Keyword \"def\": the stack contains less than two elements!\n" + callStack.getFullStack(name, originSource, originLine));
 						}
 						return DEF_TOO_FEW_ELEMENTS_ERROR;
 					}
@@ -185,14 +185,14 @@ public class Interpretor {
 						// Check the type, only a group can be executed
 						if (!(a instanceof TGroup)) {
 							if (showError) {
-								System.err.println("Error: Keyword \"exec\" excpect an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
+								System.err.println("Error: Keyword \"exec\" expect an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
 							return EXEC_GROUP_EXPECTED_ERROR;
 
 						}
 
 						// Execute
-						Interpretor newIt = new Interpretor(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(((TGroup) a).getList());
 
 						// Check for an error
@@ -221,7 +221,7 @@ public class Interpretor {
 						// To execute a group use "exec"
 						if (!(a instanceof TString)) {
 							if (showError) {
-								System.err.println("Error: Keyword \"call\" excpect a string!\n" + callStack.getFullStack(name, originSource, originLine));
+								System.err.println("Error: Keyword \"call\" expect a string!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
 							return CALL_STRING_EXPECTED_ERROR;
 
@@ -229,9 +229,9 @@ public class Interpretor {
 
 						// Execute with a single keyword
 						String callName = ((TString) a).getValue();
-						ArrayList<Token> singleton = new ArrayList<Token>();
+						ArrayList<Token> singleton = new ArrayList<>();
 						singleton.add(new TKeyword(callName));
-						Interpretor newIt = new Interpretor(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(singleton);
 
 						// Check for an error
@@ -259,14 +259,14 @@ public class Interpretor {
 						// Check the type, only a group can be executed
 						if (!(code instanceof TGroup) || !(number instanceof TNumber)) {
 							if (showError) {
-								System.err.println("Error: Keyword \"repeat\" excpect a number and an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
+								System.err.println("Error: Keyword \"repeat\" expect a number and an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
 							return REPEAT_STRING_AND_GROUP_EXPECTED_ERROR;
 
 						}
 
 						// Execute...
-						Interpretor newIt = new Interpretor(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = 0, max = (int)((TNumber) number).getValue();
 						ArrayList<Token> repeatInstructions = ((TGroup) code).getList();
 						
@@ -300,7 +300,7 @@ public class Interpretor {
 						// Check the types
 						if (!(condition instanceof TNumber) || !(ifGroup instanceof TGroup) || !(elseGroup instanceof TGroup)) {
 							if (showError) {
-								System.err.println("Error: Keyword \"if\" excpect a number and two instruction groups!\n" + callStack.getFullStack(name, originSource, originLine));
+								System.err.println("Error: Keyword \"if\" expect a number and two instruction groups!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
 							return IF_NUMBER_AND_TWO_GROUPS_EXPECTED_ERROR;
 
@@ -310,13 +310,13 @@ public class Interpretor {
 						double conditionValue = ((TNumber) condition).getValue();
 						if (conditionValue != 0. && conditionValue != 1.) {
 							if (showError) {
-								System.err.println("Error: Keyword \"if\" excpect 0 or 1 as condition argument!\n" + callStack.getFullStack(name, originSource, originLine));
+								System.err.println("Error: Keyword \"if\" expect 0 or 1 as condition argument!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
 							return IF_BOOLEAN_EXPECTED_ERROR;
 						}
 
 						// Execute...
-						Interpretor newIt = new Interpretor(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						ArrayList<Token> ifInstructions = ((TGroup) (conditionValue == 1. ? ifGroup : elseGroup)).getList();
 						
 						// ...based on the evaluation
@@ -359,7 +359,7 @@ public class Interpretor {
 						
 						if (!(str instanceof TString)) {
 							if (showError) {
-								System.err.println("Error: Keyword \"source\" excpect a string!\n" + callStack.getFullStack(name, originSource, originLine));
+								System.err.println("Error: Keyword \"source\" expect a string!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
 							return SOURCE_STRING_EXPECTED_ERROR;
 						}
@@ -372,7 +372,7 @@ public class Interpretor {
 						File file = new File(filePath);
 						String absolutePath = file.getAbsolutePath();
 						
-						// Execute it in a new WSL object with the same interpretor but new tokenizer
+						// Execute it in a new WSL object with the same interpreter but new tokenizer
 						WSL wsl = new WSL(this, showError);
 						int returnCode = wsl.executeFile(absolutePath);
 						
@@ -418,7 +418,7 @@ public class Interpretor {
 
 							int code = execute_from_env(stack, env, name, groupName, (TKeyword) t);
 							if (code != 0) {
-								return code; // Return an interpretor error code
+								return code; // Return an interpreter error code
 							}
 
 						}
@@ -455,20 +455,20 @@ public class Interpretor {
 	// Execute a user defined group
 	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name, String parent, TKeyword t) {
 		
-		// Get informations about the token
+		// Get information about the token
 		String tName = t.getName();
 		String tSource = t.getOriginSource();
 		int tLine = t.getOriginLine();
 		
-		// Create a new interpretor, and execute the code on the current stack
-		Interpretor newIt = new Interpretor(showError, stack, env, callStack.add(tName, tSource, tLine), name, parent);
+		// Create a new interpreter, and execute the code on the current stack
+		Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(tName, tSource, tLine), name, parent);
 
 		Token c = env.get(name);
 
 		try {
 
 			// Execute (prepare an ArrayList if needed)
-			int exitCode = 0;
+			int exitCode;
 			if (c instanceof TGroup) {
 				exitCode = newIt.execute(((TGroup) c).getList());
 			} else {

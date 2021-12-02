@@ -1,5 +1,6 @@
 package tw.walter.stack.functions;
 
+import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -23,7 +24,7 @@ public class FMb implements WFunction {
 			// Get the parameters
 			Token back = s.pop(), value = s.pop();
 			if (!(back instanceof TNumber)) {
-				System.err.println("Error: Function \"" + name + "\" excpect a number!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect a number!\n" + callStack.toString());
 				return false;
 			}
 			
@@ -36,12 +37,10 @@ public class FMb implements WFunction {
 			
 			// Put the value to move and rebuild the stack
 			s.add(value);
-			for (Token t: backup) {
-				s.add(t);
-			}
+			Collections.addAll(s, backup);
 			
 		} catch (EmptyStackException e) {
-			System.err.println("Error: Function \"" + name + "\": the stack does not contains enought elements!\n" + callStack.toString());
+			System.err.println("Error: Function \"" + name + "\": the stack does not contains enough elements!\n" + callStack.toString());
 			return false;
 		}
 		return true;

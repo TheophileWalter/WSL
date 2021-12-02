@@ -6,7 +6,7 @@ package tw.walter.stack.tokens;
  */
 public class TString implements Token {
 
-	private String value;
+	private final String value;
 	private String originSource;
 	private int originLine;
 

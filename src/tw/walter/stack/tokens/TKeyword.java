@@ -6,7 +6,7 @@ package tw.walter.stack.tokens;
  */
 public class TKeyword implements Token {
 
-	private String name;
+	private final String name;
 	private String originSource;
 	private int originLine;
 

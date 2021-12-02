@@ -20,11 +20,11 @@ public class FMod implements WFunction {
         try {
             Token b = s.pop(), a = s.pop();
             if (!(a instanceof TNumber) || !(b instanceof TNumber)) {
-				System.err.println("Error: Function \"" + name + "\" excpect two numbers!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect two numbers!\n" + callStack.toString());
                 return false;
             }
             int ac = (int)((TNumber)a).getValue(), bc = (int)((TNumber)b).getValue();
-            s.push(new TNumber((double)(ac % bc)));
+            s.push(new TNumber(ac % bc));
         } catch (EmptyStackException e) {
             System.err.println("Error: Function \"" + name + "\": the stack contains less than two elements!\n" + callStack.toString());
             return false;

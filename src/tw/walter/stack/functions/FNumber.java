@@ -24,7 +24,7 @@ public class FNumber implements WFunction {
 			} else if (a instanceof TNumber) {
 				s.add(a);
 			} else {
-				System.err.println("Error: Function \"" + name + "\" excpect a number or a string!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect a number or a string!\n" + callStack.toString());
 				return false;
 			}
 			

@@ -2,6 +2,7 @@ package tw.walter.stack;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ import tw.walter.stack.tokens.*;
  */
 public class WSL {
 	
-	// Public informations about WSL
+	// Public information about WSL
 	public static final String  WSL_VERSION          = "1.0 beta";
 	public static final int     WSL_VERSION_CODE     = 10;
 	public static final boolean WSL_IS_ALPHA         = false;
@@ -23,21 +24,21 @@ public class WSL {
     public static final String  WSL_COPYRIGHT        = "Copyright 2021 - Théophile Walter";
 	
 	// Private attributes
-	private Tokenizer tk;
-	private Interpretor it;
+	private final Tokenizer tk;
+	private final Interpreter it;
 
 	/*
 	 * Constructor, instantiate the class
 	 */
 	public WSL() {
 		this.tk = new Tokenizer(true);
-		this.it = new Interpretor(true);
+		this.it = new Interpreter(true);
 	}
 	public WSL(boolean showError) {
 		this.tk = new Tokenizer(showError);
-		this.it = new Interpretor(showError);
+		this.it = new Interpreter(showError);
 	}
-	public WSL(Interpretor it, boolean showError) {
+	public WSL(Interpreter it, boolean showError) {
 		this.tk = new Tokenizer(showError);
 		this.it = it;
 	}
@@ -89,10 +90,12 @@ public class WSL {
 			File file = new File(path);
 			FileInputStream fis = new FileInputStream(file);
 			byte[] data = new byte[(int) file.length()];
-			fis.read(data);
+			if (fis.read(data) <= 0) {
+				System.err.println("Warning: No data in file  \"" + path + "\"");
+			}
 			fis.close();
 
-			return new String(data, "UTF-8").replaceAll("\\r\\n", "\n").replaceAll("\\r", "\n");
+			return new String(data, StandardCharsets.UTF_8).replaceAll("\\r\\n", "\n").replaceAll("\\r", "\n");
 		} catch (Exception e) {
 			System.err.println("Error: Unable to read file \"" + path + "\"");
 			return null;
@@ -100,12 +103,11 @@ public class WSL {
 	}
 	
 	/*
-	 * Run an top-level interpretor in standard input/output
+	 * Run an top-level interpreter in standard input/output
 	 */
 	public void topLevel() {
 		
 		// The scanner for reading stdin
-		@SuppressWarnings( "resource" )
 		Scanner scanner = new Scanner(System.in);
 		
 		// A string to save lave input in case of multiple line input
@@ -114,10 +116,11 @@ public class WSL {
 		System.out.println("WSL version " + WSL_VERSION + "\n" + WSL_COPYRIGHT);
 		
 		// Loop to execute every given lines
+		//noinspection InfiniteLoopStatement
 		while (true) {
 			
 		    // Get the line and execute it
-		    if (lastInput == "") {
+		    if ("".equals(lastInput)) {
 		    	System.out.print("\nwsl> ");
 		    }
 		    String inputString = scanner.nextLine();
@@ -136,6 +139,7 @@ public class WSL {
 		
 	}
 
+	//noinspection unused
 	public void __debug_print_env() {
 		it.__debug_print_env();
 	}

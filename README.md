@@ -4,7 +4,7 @@ All the data and codes are stored in this stack.<br />
 The language functions and keywords allows you to compute operations on that stack.<br />
 <br />
 <h3>Basics</h3>
-A script is a succession of instructions separated with "whites charactes" (space, tabulation, line-break)<br />
+A script is a succession of instructions separated with "whites characters" (space, tabulation, line-break)<br />
 A comment starts with <code>**</code> and finish with a line-break<br />
 You can put some code in the stack (eg. for conditional execution) by surrounding it with parentheses (<i>cf</i>. type <code>^Group</code>)<br />
 <h3>Data types</h3>
@@ -57,7 +57,7 @@ There is five data type in WSL
     <b>def</b><br />
     <code>^String -> ^a' -> def</code><br />
     Define a value to be called later<br />
-    <u>Example</u>: <code>"pi" 3.1415926535 def ** When you'll call the keyword "pi", 3.1415926535 will be put in the stack</code></br />
+    <u>Example</u>: <code>"pi" 3.1415926535 def ** When you'll call the keyword "pi", 3.1415926535 will be put in the stack</code><br />
     If the value to define is a group, then when you'll call it, the code inside the group will be called<br />
     <u>Example</u>: <code>"group" ("Hello" print) def ** You can now call the code with the keyword "group"</code><br />
     If the definition is in a group, the name will be prefixed with the parent group name<br />
@@ -201,6 +201,12 @@ There is five data type in WSL
     <u>Example</u>: <code>"5.3" number ** Will put 5.3 in the stack (with type ^Number)</code><br />
   </li><br />
   <li>
+    <b>pack</b><br />
+    <code>... -> ^Number -> pack -> ^Group</code><br />
+    Put the n elements from the stack inside a group<br />
+    <u>Example</u>: <code>1 2 3 4 5 2 pack ** will put 4 and 5 in a group, the stack will be "1 2 3 (4 5)"</code><br />
+  </li><br />
+  <li>
     <b>pop</b><br />
     <code>^a' -> pop</code><br />
     Remove the element on top of the stack<br />
@@ -244,8 +250,29 @@ There is five data type in WSL
   <li>
     <b>sub</b><br />
     <code>^Number -> ^Number -> sub -> ^Number</code><br />
-    Substract two numbers and put the result in the stack<br />
+    Subtract two numbers and put the result in the stack<br />
     <u>Example</u>: <code>5 7 sub ** Will put -2 in the stack</code><br />
+  </li><br />
+  <li>
+    <b>var</b><br />
+    <code>^String -> var -> ^a'</code><br />
+    Return the value of a WSL system variable<br />
+    Variables are:<br />
+    <ul>
+        <li>version: String version of WSL</li>
+        <li>version_code: Integer version code of WSL</li>
+        <li>is_alpha: 1 if WSL is in alpha version, else 0</li>
+        <li>is_beta: 1 if WSL is in beta version, else 0</li>
+        <li>lib_version: String version of expected WSL standard library version</li>
+        <li>lib_version_code: Integer version code of expected WSL standard library version</li>
+        <li>copyright: String WSL copyright</li>
+        <li>line: Current line number in current file</li>
+        <li>file: Current file name</li>
+    </ul>
+    <u>Examples</u>:
+      <div class="indent">
+        <code>"version" var ** Will put something like "1.0 beta" in the stack</code><br />
+      </div>
   </li><br />
 </ul>
 <h3>Examples</h3>
@@ -319,6 +346,6 @@ And here is the equivalent code in WSL with <code>this</code><br />
 0 10 rec</pre><br />
 <br />
 This code works well because at each recursive call, the current group name is modified. So the <code>n</code> group is called <code>rec.n</code> at first call, <code>rec.rec.n</code> at the second, <i>ect</i>.<br />
-So every group created in each recursive call has an unique name and can be identified with <code>this</code><br />
+So every group created in each recursive call has a unique name and can be identified with <code>this</code><br />
 <b>Warning</b>: If you use <code>this</code> in groups called with others functions (eg: <code>iflt</code>) it won't work because the group called will be <code>iflt.n</code>.<br />
-To avoir these problems, use the stack as much as possible and use <code>this</code> as a last resort and only if you understand prefectly how it works.<br />
+To avoid these problems, use the stack as much as possible and use <code>this</code> as a last resort and only if you understand perfectly how it works.<br />

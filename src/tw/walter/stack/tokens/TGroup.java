@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  */
 public class TGroup implements Token, Iterable<Token>, Iterator<Token> {
 
-	private ArrayList<Token> elements;
+	private final ArrayList<Token> elements;
 	private int count = -1;
 	private String originSource;
 	private int originLine;
@@ -29,11 +29,11 @@ public class TGroup implements Token, Iterable<Token>, Iterator<Token> {
 
 	@Override
 	public String toString() {
-		String content = "";
+		StringBuilder content = new StringBuilder();
 		for (Token t: elements) {
-			content += t.toString() + " ";
+			content.append(t.toString()).append(" ");
 		}
-		content = content.substring(0, content.length() > 0 ? content.length()-1 : 0);
+		content = new StringBuilder(content.substring(0, content.length() > 0 ? content.length() - 1 : 0));
 		return "TGroup<" + content + ">";
 	}
 

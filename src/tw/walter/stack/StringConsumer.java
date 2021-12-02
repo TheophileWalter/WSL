@@ -5,7 +5,7 @@ package tw.walter.stack;
  */
 public class StringConsumer {
 
-	private char[] s;
+	private final char[] s;
 	private int offset;
 	private StringConsumerListener listener;
 
@@ -29,10 +29,6 @@ public class StringConsumer {
 		}
 		offset--;
 	}
-
-	public void reset() {
-		offset = 0;
-	}
 	
 	private char arrayTidyRead(char[] array, int index) {
 		if (index < 0 || index >= array.length) {
@@ -44,10 +40,6 @@ public class StringConsumer {
 	// Only one listener is possible
 	public void setListener(StringConsumerListener listener) {
 		this.listener = listener;
-	}
-	
-	public void removeListener() {
-		this.listener = null;
 	}
 
 }

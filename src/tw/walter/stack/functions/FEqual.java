@@ -26,7 +26,7 @@ public class FEqual implements WFunction {
 				String ac = ((TString) a).getValue(), bc = ((TString) b).getValue();
 				s.add(new TNumber(ac.equals(bc) ? 1. : 0.));
 			} else {
-				System.err.println("Error: Function \"" + name + "\" excpect two strings or two numbers!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect two strings or two numbers!\n" + callStack.toString());
 				return false;
 			}
 			

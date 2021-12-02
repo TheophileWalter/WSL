@@ -20,7 +20,7 @@ public class FPrint implements WFunction {
 			Token a = s.pop();
 
 			if (!(a instanceof TString)) {
-				System.err.println("Error: Function \"" + name + "\" excpect a string!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect a string!\n" + callStack.toString());
 				return false;
 			}
 

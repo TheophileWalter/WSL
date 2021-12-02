@@ -7,6 +7,6 @@ import tw.walter.stack.tokens.Token;
 
 public interface WFunction {
 
-	public boolean execute(Stack<Token> s, CallStack callStack);
+	boolean execute(Stack<Token> s, CallStack callStack);
 
 }

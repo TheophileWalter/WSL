@@ -9,7 +9,7 @@ import javafx.util.Pair;
  */
 public class CallStack {
 	
-	private ArrayList<Pair<String, Pair<String, Integer>>> list; // (functionName, (Source, Line))
+	private final ArrayList<Pair<String, Pair<String, Integer>>> list; // (functionName, (Source, Line))
 	
 	public CallStack() {
 		list = new ArrayList<>();
@@ -37,15 +37,25 @@ public class CallStack {
 	public void _add(Pair<String, Pair<String, Integer>> v) {
 		list.add(v);
 	}
+
+	// Return the current line number
+	public int currentLine() {
+		return list.get(list.size() - 1).getValue().getValue();
+	}
+
+	// Return the current file name
+	public String currentFile() {
+		return list.get(list.size() - 1).getValue().getKey();
+	}
 	
 	// Get the current stack as string
 	@Override
 	public String toString() {
-		String r = "";
+		StringBuilder r = new StringBuilder();
 		for (Pair<String, Pair<String, Integer>> e: list) {
-			r = "function \"" + e.getKey() + "\" from source\n\t\"" + e.getValue().getKey() + "\" at line " + e.getValue().getValue().toString() + "\n" + r;
+			r.insert(0, "function \"" + e.getKey() + "\" from source\n\t\"" + e.getValue().getKey() + "\" at line " + e.getValue().getValue().toString() + "\n");
 		}
-		return r;
+		return r.toString();
 	}
 	
 	// Returns the full stack with last token as a parameter

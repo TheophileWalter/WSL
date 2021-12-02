@@ -1,5 +1,6 @@
 package tw.walter.stack.functions;
 
+import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -23,7 +24,7 @@ public class FDup implements WFunction {
 			// Get the parameters
 			Token num = s.pop();
 			if (!(num instanceof TNumber)) {
-				System.err.println("Error: Function \"" + name + "\" excpect a number!\n" + callStack.toString());
+				System.err.println("Error: Function \"" + name + "\" expect a number!\n" + callStack.toString());
 				return false;
 			}
 			
@@ -36,13 +37,11 @@ public class FDup implements WFunction {
 			
 			// Put the value to move and rebuild the stack
 			for (int i = 0; i < 2; i++) {
-				for (Token t: backup) {
-					s.add(t);
-				}
+				Collections.addAll(s, backup);
 			}
 			
 		} catch (EmptyStackException e) {
-			System.err.println("Error: Function \"" + name + "\": the stack does not contains enought elements!\n" + callStack.toString());
+			System.err.println("Error: Function \"" + name + "\": the stack does not contains enough elements!\n" + callStack.toString());
 			return false;
 		}
 		return true;

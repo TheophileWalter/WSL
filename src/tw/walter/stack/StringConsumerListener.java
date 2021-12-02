@@ -6,9 +6,9 @@ package tw.walter.stack;
 public interface StringConsumerListener {
 
 	// Method called on StringConsumer get
-	public void onStringConsumerGet(char c);
+	void onStringConsumerGet(char c);
 
 	// Method called on StringConsumer reverse
-	public void onStringConsumerReverse(char c);
+	void onStringConsumerReverse(char c);
 	
 }

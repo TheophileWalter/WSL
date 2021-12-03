@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import tw.walter.stack.exceptions.BreakLoopException;
 import tw.walter.stack.tokens.*;
 
 /*
@@ -69,8 +70,14 @@ public class WSL {
 		}
 
 		// Execute the instructions
-		int resultCode = it.execute(tokens);
-		
+		int resultCode = 0;
+		try {
+			resultCode = it.execute(tokens);
+		} catch (BreakLoopException e) {
+			// Catch error if "break" is used outside a loop
+			System.err.println(e.getMessage());
+		}
+
 		if (resultCode != 0) {
 			return -1;
 		}

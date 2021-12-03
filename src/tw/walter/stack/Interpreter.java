@@ -3,6 +3,7 @@ package tw.walter.stack;
 import java.io.File;
 import java.util.*;
 
+import tw.walter.stack.exceptions.BreakLoopException;
 import tw.walter.stack.functions.WFunctionsList;
 import tw.walter.stack.functions.WFunction;
 import tw.walter.stack.tokens.*;
@@ -94,7 +95,7 @@ public class Interpreter {
 	/*
 	 * Execute an array of tokens Return the status code
 	 */
-	public int execute(ArrayList<Token> instructions) {
+	public int execute(ArrayList<Token> instructions) throws BreakLoopException {
 
 		// Read the instructions
 		for (Token t : instructions) {
@@ -280,7 +281,12 @@ public class Interpreter {
 
 						// ...in a loop
 						for (int i = 0; i < max && exitCode == 0; i++) {
-							exitCode = newIt.execute(repeatInstructions);
+							try {
+								exitCode = newIt.execute(repeatInstructions);
+							} catch (BreakLoopException e) {
+								// If "break" is called inside of the loop, we stop its execution
+								break;
+							}
 						}
 
 						// Check for an error
@@ -356,8 +362,13 @@ public class Interpreter {
 								break;
 							}
 
-							// If not exit from the loop, we execute the code
-							exitCode = newIt.execute(whileInstructions);
+							try {
+								// If not exit from the loop, we execute the code
+								exitCode = newIt.execute(whileInstructions);
+							} catch (BreakLoopException e) {
+								// If "break" is called inside of the loop, we stop its execution
+								break;
+							}
 
 							// Check for an error
 							if (exitCode != 0) {
@@ -480,6 +491,15 @@ public class Interpreter {
 					
 				}
 
+				// Break a loop
+				else if ("break".equals(name)) {
+
+					// Throw an exception to stop all the interpreters up to the loop (or the to interpreter that will throw an error)
+					// Also propagate the error message, just in case
+					throw new BreakLoopException("Error: Keyword \"break\" used outside of a loop!\n" + callStack.getFullStack(name, originSource, originLine));
+
+				}
+
 				// If it's not a language keyword
 				else {
 
@@ -539,7 +559,7 @@ public class Interpreter {
 	}
 	
 	// Execute a user defined group
-	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name, String parent, TKeyword t) {
+	private int execute_from_env(Stack<Token> stack, HashMap<String, Token> env, String name, String parent, TKeyword t) throws BreakLoopException {
 		
 		// Get information about the token
 		String tName = t.getName();

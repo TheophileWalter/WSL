@@ -40,6 +40,14 @@ There is five data type in WSL
 <h3>Language keywords</h3>
 <ul>
   <li>
+    <b>break</b><br />
+    <code>break</code><br />
+    Exit from a "repeat" or "while" loop<br />
+    <u>Example</u>:<br />
+    <pre>** This code will print numbers from 1 to 9 instead of 9999
+0 (1 add (break) exch (copy uprintln) exch copy 3 mb 10 equal if) 9999 repeat</pre>
+  </li><br />
+  <li>
     <b>call</b><br />
     <code>^String -> call</code><br />
     Call a keyword, a function or a defined group from a string<br />

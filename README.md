@@ -266,6 +266,27 @@ while "Continue...." println</pre><br />
       </div>
   </li><br />
   <li>
+    <b>strlen</b><br />
+    <code>^String -> strlen -> ^Number</code><br />
+    Return the length of a string<br />
+    <u>Example</u>: <code>"Hello world!" strlen ** Will put 12 in the stack</code>
+  </li><br />
+  <li>
+    <b>substr</b><br />
+    <code>^String -> ^Number -> ^Number -> substr -> ^String</code><br />
+    Return a substring from a given string<br />
+    First number is start index (0 based), second is end index<br />
+    Negatives indexes can be used to specify a position from the end of the string<br />
+    <u>Examples</u>:
+      <div class="indent">
+        <code>"Hello, world!" 7 12 substr ** Will put "world" in the stack</code><br />
+        <code>"Hello, world!" -6 -1 substr ** Will put "world" in the stack</code><br />
+        <code>"Hello, world!" 5 -7 substr ** Will put "," in the stack</code><br />
+        <code>"Hello, world!" -8 7 substr ** Will put "," in the stack</code><br />
+        <code>"Hello, world!" -5 2 substr ** Will put "" in the stack</code><br />
+      </div>
+  </li><br />
+  <li>
     <b>sub</b><br />
     <code>^Number -> ^Number -> sub -> ^Number</code><br />
     Subtract two numbers and put the result in the stack<br />

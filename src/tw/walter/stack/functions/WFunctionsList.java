@@ -37,6 +37,8 @@ public class WFunctionsList {
 		add("pack",   new FPack()        );
 		add("var",    new FVar()         );
 		add("input",  new FInput(scanner));
+		add("strlen", new FStrlen()      );
+		add("substr", new FSubstr()      );
 
 	}
 

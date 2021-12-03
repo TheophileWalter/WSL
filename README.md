@@ -137,7 +137,7 @@ There is five data type in WSL
     <u>Example</u>: <pre>** This code will ask for the user to type "yes" before continuing
 ("Enter \"yes\" to continue: " print input "yes" equal not)
 ("You didn't entered \"yes\"!" println)
-while "Continue...." println</pre><br />
+while "Continue...." println</pre>
   </li><br />
 </ul>
 <h3>Built-in functions</h3>

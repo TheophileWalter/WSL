@@ -1,10 +1,7 @@
 package tw.walter.stack;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 
 import tw.walter.stack.functions.WFunctionsList;
 import tw.walter.stack.functions.WFunction;
@@ -63,20 +60,25 @@ public class Interpreter {
 	// Do we need to show errors
 	private final boolean showError;
 
-	public Interpreter(boolean showError, Stack<Token> stack, HashMap<String, Token> env, CallStack callStack, String groupName, String parentName) {
+	// The scanner for stdin inputs
+	private final Scanner scanner;
+
+	public Interpreter(Scanner scanner, boolean showError, Stack<Token> stack, HashMap<String, Token> env, CallStack callStack, String groupName, String parentName) {
+		this.scanner = scanner;
 		this.showError = showError;
 		this.stack = stack;
-		list = new WFunctionsList();
+		list = new WFunctionsList(scanner);
 		this.env = env;
 		this.groupName = groupName;
 		this.parentName = parentName;
 		this.callStack = callStack;
 	}
 
-	public Interpreter(boolean showError) {
+	public Interpreter(Scanner scanner, boolean showError) {
+		this.scanner = scanner;
 		this.showError = showError;
 		stack = new Stack<>();
-		list = new WFunctionsList();
+		list = new WFunctionsList(scanner);
 		env = new HashMap<>();
 		groupName = null; // The first group is set to null to don't prefix the keywords
 		parentName = null;
@@ -192,7 +194,7 @@ public class Interpreter {
 						}
 
 						// Execute
-						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(scanner, showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(((TGroup) a).getList());
 
 						// Check for an error
@@ -231,7 +233,7 @@ public class Interpreter {
 						String callName = ((TString) a).getValue();
 						ArrayList<Token> singleton = new ArrayList<>();
 						singleton.add(new TKeyword(callName));
-						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(scanner, showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = newIt.execute(singleton);
 
 						// Check for an error
@@ -266,7 +268,7 @@ public class Interpreter {
 						}
 
 						// Execute...
-						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(scanner, showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = 0, max = (int)((TNumber) number).getValue();
 						ArrayList<Token> repeatInstructions = ((TGroup) code).getList();
 						
@@ -316,7 +318,7 @@ public class Interpreter {
 						}
 
 						// Execute...
-						Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						Interpreter newIt = new Interpreter(scanner, showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						ArrayList<Token> ifInstructions = ((TGroup) (conditionValue == 1. ? ifGroup : elseGroup)).getList();
 						
 						// ...based on the evaluation
@@ -461,7 +463,7 @@ public class Interpreter {
 		int tLine = t.getOriginLine();
 		
 		// Create a new interpreter, and execute the code on the current stack
-		Interpreter newIt = new Interpreter(showError, stack, env, callStack.add(tName, tSource, tLine), name, parent);
+		Interpreter newIt = new Interpreter(scanner, showError, stack, env, callStack.add(tName, tSource, tLine), name, parent);
 
 		Token c = env.get(name);
 

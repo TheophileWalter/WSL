@@ -161,8 +161,14 @@ There is five data type in WSL
     <b>exit</b><br />
     <code>^Number -> exit</code><br />
     Exit the script with the given code<br />
-    The code will be casted to an integer if a float is given
+    The code will be casted to an integer if a float is given<br />
     <u>Example</u>: <code>0 exit ** Exit with code 0</code><br />
+  </li><br />
+  <li>
+    <b>input</b><br />
+    <code>exit -> ^String</code><br />
+    Read input from stdin and put it as a string into the stack<br />
+    <u>Example</u>: <code>input print ** Will print whatever the user inputs</code><br />
   </li><br />
   <li>
     <b>max</b><br />
@@ -269,10 +275,7 @@ There is five data type in WSL
         <li>line: Current line number in current file</li>
         <li>file: Current file name</li>
     </ul>
-    <u>Examples</u>:
-      <div class="indent">
-        <code>"version" var ** Will put something like "1.0 beta" in the stack</code><br />
-      </div>
+    <u>Example</u>: <code>"version" var ** Will put something like "1.0 beta" in the stack</code><br />
   </li><br />
 </ul>
 <h3>Examples</h3>

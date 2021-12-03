@@ -26,17 +26,18 @@ public class WSL {
 	// Private attributes
 	private final Tokenizer tk;
 	private final Interpreter it;
+	private final Scanner scanner = new Scanner(System.in);
 
 	/*
 	 * Constructor, instantiate the class
 	 */
 	public WSL() {
 		this.tk = new Tokenizer(true);
-		this.it = new Interpreter(true);
+		this.it = new Interpreter(scanner, true);
 	}
 	public WSL(boolean showError) {
 		this.tk = new Tokenizer(showError);
-		this.it = new Interpreter(showError);
+		this.it = new Interpreter(scanner, showError);
 	}
 	public WSL(Interpreter it, boolean showError) {
 		this.tk = new Tokenizer(showError);
@@ -106,9 +107,6 @@ public class WSL {
 	 * Run an top-level interpreter in standard input/output
 	 */
 	public void topLevel() {
-		
-		// The scanner for reading stdin
-		Scanner scanner = new Scanner(System.in);
 		
 		// A string to save lave input in case of multiple line input
 		String lastInput = "";

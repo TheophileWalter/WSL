@@ -40,25 +40,11 @@
 "nif" (not if) def ** Inverse if
 ** Is a number is lower than another
 "lt" (
-    ** False if the two numbers are equals
-    (pop pop false)
-    ** Check if they are different
-    (copy 2 mb max equal)
-    ** Prepare the stack order
-    (3 mb) 2 repeat 2 dup (5 mb) 2 repeat
-    ** Condition
-    equal if
+    exch copy 2 mb max equal not
 ) def
 ** Is a number is greater than another
 "gt" (
-    ** False if the two numbers are equals
-    (pop pop false)
-    ** Check if they are different
-    (copy 2 mb min equal)
-    ** Prepare the stack order
-    (3 mb) 2 repeat 2 dup (5 mb) 2 repeat
-    ** Condition
-    equal if
+    copy 2 mb max equal not
 ) def
 "iflt" (lt if) def ** If lower than, example: "(1) (2) 0 5 iflt" will put 1 in the stack
 "ifgt" (gt if) def ** If greater than, example: "(1) (2) 0 5 ifgt" will put 2 in the stack

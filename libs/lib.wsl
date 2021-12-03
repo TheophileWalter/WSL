@@ -79,6 +79,17 @@
 
 ** Mathematics group
 "math" (
+
+    ** Aliases
+    "add" (add) def
+    "div" (div) def
+    "max" (max) def
+    "min" (min) def
+    "mod" (mod) def
+    "mul" (mul) def
+    "rand" (random) def
+    "sqrt" (sqrt) def
+    "sub" (sub) def
     
     ** Constants
     "pi" 3.1415926535 def
@@ -127,6 +138,9 @@
 
 ** Operations on the stack
 "stack" (
+
+    ** Aliases
+    "size" (size) def
 
     ** Empty the stack
     ** Get the stack size before adding the (pop) group
@@ -255,7 +269,98 @@
 
 ** String utilities
 "string" (
-    ** TODO
+
+    ** Aliases
+    "sub" (substr) def
+    "len" (strlen) def
+
+    ** ^String -> ^Group -> ^a' -> string.iter
+    ** Execute a code group over each character of a string
+    ** The block will be called as many times as the string contains characters, with the current character at the top of the stack and the accumulator below
+    ** The execution of the group must consume the current character and the accumulator and pur the new accumulator on top of the string
+    ** At the end, only the accumulator remains
+    ** See string.reverse for a simple example
+    "iter" (
+        ** Current position in string
+        0
+        ** Main code
+        (
+        	** Backup the original string
+        	exch copy 4 mb exch
+        	** Get the current character
+        	copy 4 mb copy 1 add substr
+        	** Call the user group
+        	2 1 mmb copy 5 mb exec
+        	** Increment position
+        	exch 1 add
+        	** Restore positions
+        	exch 2 mb
+        )
+        ** Iter over string length
+        4 1 mmb copy strlen exch 3 mb repeat
+        ** Clean up after iteration
+        pop pop exch pop
+    ) def
+
+    ** Reverse a string
+    "rev" (
+        ** Code group for iteration
+        (
+            ** Exchange the current character and the accumulator
+            exch
+            ** Then concatenate them (result will be the new accumulator)
+            concat
+        )
+        ** Iteration accumulator (contains the reversed string)
+        ""
+        ** Iter
+        string.iter
+    ) def
+
+    ** Returns the position of a substring in a string
+    "pos" (
+        ** Default result
+        -1 2 mb
+        ** Repeated group
+        (
+        	** Saves the indexes
+        	copy 2 1 mmb copy 2 mb
+        	** Put the strings on top
+        	4 2 mmb 3 mb
+        	** Saves long string
+        	copy 6 mb
+        	** Prepare for substr
+        	2 mb exch copy 2 mb add
+        	** Get the substring
+        	substr
+        	** Saves the short string
+        	exch copy 4 mb
+        	** Compare the strings
+        	equal
+        	** Group if string are equals, that means we've found the position
+        	** Then clean the stack and leave the "repeat" loop
+        	(pop 3 mb "" break) exch
+        	** If the string are not equals, that means we did not found the string
+        	** We prepare the stack for the next iteration
+        	(exch 1 add) exch
+        	** Check if the string are equals
+        	if
+        )
+        ** Get the length of the two strings
+        exch copy strlen 3 1 mmb copy strlen exch 3 mb
+        ** Prepare the loop
+        copy 2 1 mmb copy 2 mb sub 2 1 mmb pop 0 exch 5 1 mmb exch 1 add
+        ** Loop
+        repeat
+        ** Clean the stack and keep only the position (or the default result)
+        (pop) 4 repeat
+    ) def
+
+    ** Return a single character from a string
+    "char" (
+        copy 1 add substr
+    ) def
+
 ) static
 
 ** Tests utilities

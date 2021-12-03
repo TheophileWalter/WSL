@@ -97,3 +97,24 @@ size 0 "\"test_lib.wsl\" error: stack.rev" test.assert_equal ** Makes sure that 
 ** Number
 number.nan number.isnan "\"test_lib.wsl\" error: number.nan" test.assert_true
 1 number.isnan "\"test_lib.wsl\" error: number.isnan" test.assert_false
+
+** String
+"Hello world!" (concat) "" string.iter "Hello world!" "\"test_lib.wsl\" error: string.iter" test.assert_equal
+"" (concat) "" string.iter "" "\"test_lib.wsl\" error: string.iter" test.assert_equal
+"Hello world!" (pop "a" concat) "b" string.iter "baaaaaaaaaaaa" "\"test_lib.wsl\" error: string.iter" test.assert_equal
+"Hello world!" string.rev "!dlrow olleH" "\"test_lib.wsl\" error: string.reverse" test.assert_equal
+"" string.rev "" "\"test_lib.wsl\" error: string.reverse" test.assert_equal
+"a" string.rev "a" "\"test_lib.wsl\" error: string.reverse" test.assert_equal
+"Hello world!" "Hello" string.pos 0 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello world!" "llo wo" string.pos 2 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello world!" "world!" string.pos 6 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello world!" "!" string.pos 11 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello world!" "" string.pos 0 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello world!" "Hello world!" string.pos 0 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello world!" "Foo" string.pos -1 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello world! long" "Foo" string.pos -1 "\"test_lib.wsl\" error: string.pos" test.assert_equal
+"Hello" 0 string.char "H" "\"test_lib.wsl\" error: string.char" test.assert_equal
+"Hello" 1 string.char "e" "\"test_lib.wsl\" error: string.char" test.assert_equal
+"Hello" 2 string.char "l" "\"test_lib.wsl\" error: string.char" test.assert_equal
+"Hello" 3 string.char "l" "\"test_lib.wsl\" error: string.char" test.assert_equal
+"Hello" 4 string.char "o" "\"test_lib.wsl\" error: string.char" test.assert_equal

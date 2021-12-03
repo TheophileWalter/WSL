@@ -7,6 +7,7 @@ public class Main {
 
 	public static void main(String... args) {
 
+		// Parse arguments as list
 		List<String> argsList = Arrays.asList(args);
 
 		WSL wsl = new WSL();

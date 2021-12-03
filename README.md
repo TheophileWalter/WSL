@@ -119,6 +119,18 @@ There is five data type in WSL
     If the definition is in a group, the name will be prefixed with the parent group name (as for <code>def</code>)<br />
     <i>Note</i>: If you use it with a value instead of a group, the value will be put in the stack<br />
   </li><br />
+  <li>
+    <b>while</b><br />
+    <code>^Group -> ^Group -> while</code><br />
+    Repeat a code while a condition is true<br />
+    The first group is the condition, it will be executed and must produce 0 or 1 at the top of the stack<br />
+    If the condition produces 1, the second group will be executed and everything restarts<br />
+    If the condition produces 0, the second group will not be executed and the program will continue the the next instructions<br />
+    <u>Example</u>: <pre>** This code will ask for the user to type "yes" before continuing
+("Enter \"yes\" to continue: " print input "yes" equal not)
+("You didn't entered \"yes\"!" println)
+while "Continue...." println</pre><br />
+  </li><br />
 </ul>
 <h3>Built-in functions</h3>
 <ul>
@@ -308,9 +320,32 @@ stack.pretty_print</pre><br />
 <pre>"fibonacci" ((2 dup sum) exch repeat) def
 
 0 1 7 fibonacci stack.pretty_print</pre><br />
-<b>Example #3:</b> Recursive call<br />
+<b>Example #3:</b> The [Truth-machine](https://esolangs.org/wiki/Truth-machine)<br />
+<pre>** Group called if user inputs "0"
+(print)
+** Group called if user does not inputs "0"
+(
+	** Group called if user inputs "1"
+	(
+		** Print "1" forever
+		(true) ("1" println) while
+	) exch ** Move it back to let the user input on top of the stack
+	** Group called if user inputs anything else than "0" and "1"
+	() exch
+	** If user input == "1"
+	"1" equal if
+)
+** Prompt user for input
+"Enter 0 or 1: " print input
+** Copy input and saves it at the bottom of the stack for the "else" statement
+copy 3 mb
+** If user input == "0"
+"0" equal if</pre><br />
+<b>Example #4:</b> The Truth-machine (uncommented version)<br />
+<pre>(print) (((true) ("1" println) while) exch () exch "1" equal if) "Enter 0 or 1: " print input copy 3 mb "0" equal if</pre><br />
+<b>Example #5:</b> Recursive call<br />
 <pre>10 "rec" (copy uprintln 1 sub copy (rec) exch () exch 0 ifgt) def rec</pre><br />
-<b>Example #4:</b> Usage of <code>this</code><br />
+<b>Example #6:</b> Usage of <code>this</code><br />
 The group <code>this</code> is defined in the standard library, it can be used to call a group defined in the current group without knowing the name of this current group.<br />
 It can be used for recursive call with a non-stack paradigm<br />
 <br />

@@ -25,7 +25,7 @@ public class Interpreter {
 	public static final int EXEC_TOO_FEW_ELEMENTS_ERROR = -8;
 	public static final int EXEC_GROUP_EXPECTED_ERROR = -9;
 	public static final int REPEAT_TOO_FEW_ELEMENTS_ERROR = -10;
-	public static final int REPEAT_STRING_AND_GROUP_EXPECTED_ERROR = -11;
+	public static final int REPEAT_NUMBER_AND_GROUP_EXPECTED_ERROR = -11;
 	public static final int IF_TOO_FEW_ELEMENTS_ERROR = -12;
 	public static final int IF_NUMBER_AND_TWO_GROUPS_EXPECTED_ERROR = -13;
 	public static final int IF_BOOLEAN_EXPECTED_ERROR = -14;
@@ -40,6 +40,12 @@ public class Interpreter {
 	public static final int REPEAT_EXECUTION_ERROR = -23;
 	public static final int IF_EXECUTION_ERROR = -24;
 	public static final int USER_GROUP_EXECUTION_ERROR = -25;
+	public static final int WHILE_GROUPS_EXPECTED_ERROR = -26;
+	public static final int WHILE_CONDITION_EXECUTION_ERROR = -27;
+	public static final int WHILE_CONDITION_TYPE_ERROR = -28;
+	public static final int WHILE_BOOLEAN_EXPECTED_ERROR = -29;
+	public static final int WHILE_EXECUTION_ERROR = -30;
+	public static final int WHILE_TOO_FEW_ELEMENTS_ERROR = -31;
 	
 	// The stack
 	private final Stack<Token> stack;
@@ -249,8 +255,8 @@ public class Interpreter {
 					}
 					
 				}
-				
-				// If it's a loop
+
+				// If it's a repeat loop
 				else if ("repeat".equals(name)) {
 
 					// Execute the previous group in the stack
@@ -263,7 +269,7 @@ public class Interpreter {
 							if (showError) {
 								System.err.println("Error: Keyword \"repeat\" expect a number and an instruction group!\n" + callStack.getFullStack(name, originSource, originLine));
 							}
-							return REPEAT_STRING_AND_GROUP_EXPECTED_ERROR;
+							return REPEAT_NUMBER_AND_GROUP_EXPECTED_ERROR;
 
 						}
 
@@ -271,7 +277,7 @@ public class Interpreter {
 						Interpreter newIt = new Interpreter(scanner, showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
 						int exitCode = 0, max = (int)((TNumber) number).getValue();
 						ArrayList<Token> repeatInstructions = ((TGroup) code).getList();
-						
+
 						// ...in a loop
 						for (int i = 0; i < max && exitCode == 0; i++) {
 							exitCode = newIt.execute(repeatInstructions);
@@ -288,7 +294,85 @@ public class Interpreter {
 						}
 						return REPEAT_TOO_FEW_ELEMENTS_ERROR;
 					}
-					
+
+				}
+
+				// If it's a while loop
+				else if ("while".equals(name)) {
+
+					// Execute the previous group in the stack
+					try {
+
+						Token code = stack.pop(), condition = stack.pop();
+
+						// Check the type, only a group can be executed
+						if (!(code instanceof TGroup) || !(condition instanceof TGroup)) {
+							if (showError) {
+								System.err.println("Error: Keyword \"while\" expect two instruction groups!\n" + callStack.getFullStack(name, originSource, originLine));
+							}
+							return WHILE_GROUPS_EXPECTED_ERROR;
+
+						}
+
+						// Execute...
+						Interpreter newIt = new Interpreter(scanner, showError, stack, env, callStack.add(name, originSource, originLine), groupName, parentName); // Execute in the same group name
+						int exitCode;
+						ArrayList<Token> whileCondition = ((TGroup) condition).getList(), whileInstructions = ((TGroup) code).getList();
+
+						// ...in a loop
+						while (true) {
+
+							// Execute the condition
+							exitCode = newIt.execute(whileCondition);
+							if (exitCode != 0) {
+								return WHILE_CONDITION_EXECUTION_ERROR;
+							}
+							// Check condition type
+							Token bool;
+							try {
+								bool = stack.pop();
+							} catch (EmptyStackException e) {
+								if (showError) {
+									System.err.println("Error: Keyword \"while\": stack is empty after executing the condition block!\n" + callStack.getFullStack(name, originSource, originLine));
+								}
+								return WHILE_TOO_FEW_ELEMENTS_ERROR;
+							}
+							if (!(bool instanceof TNumber)) {
+								if (showError) {
+									System.err.println("Error: The condition block for \"while\" loop must produce a number!\n" + callStack.getFullStack(name, originSource, originLine));
+								}
+								return WHILE_CONDITION_TYPE_ERROR;
+							}
+							// Check the condition value
+							double boolValue = ((TNumber) bool).getValue();
+							if (boolValue != 0. && boolValue != 1.) {
+								if (showError) {
+									System.err.println("Error: The condition block for \"while\" loop must produce 0 or 1!\n" + callStack.getFullStack(name, originSource, originLine));
+								}
+								return WHILE_BOOLEAN_EXPECTED_ERROR;
+							}
+							// Check if we must exit the loop
+							if (boolValue == 0.) {
+								break;
+							}
+
+							// If not exit from the loop, we execute the code
+							exitCode = newIt.execute(whileInstructions);
+
+							// Check for an error
+							if (exitCode != 0) {
+								return WHILE_EXECUTION_ERROR;
+							}
+
+						}
+
+					} catch (EmptyStackException e) {
+						if (showError) {
+							System.err.println("Error: Keyword \"while\": the stack contains less than two elements!\n" + callStack.getFullStack(name, originSource, originLine));
+						}
+						return WHILE_TOO_FEW_ELEMENTS_ERROR;
+					}
+
 				}
 				
 				// If it's a condition

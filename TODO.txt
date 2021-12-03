@@ -1,5 +1,5 @@
-prompt: User input from stdin
+substr
+strlen
 Group "string"
-while
 ... one group per data type kois
 Ajouter un mode pour générer un code texte à partir d'une liste de tokens (mode compact ou indenté)
